@@ -39,17 +39,17 @@ export const FundDetails: React.FC<FundDetailsProps> = ({ scheme }) => {
         <DetailCard
           icon="chart-pie"
           label={t('schemeDetails.expenseRatio')}
-          value={scheme.expense_ratio ? `${scheme.expense_ratio}%` : t('schemeDetails.na')}
+          value={scheme.expense_ratio ? t('common.percentValue', { value: scheme.expense_ratio }) : t('schemeDetails.na')}
         />
         <DetailCard
           icon="clock"
           label={t('schemeDetails.aum')}
-          value={scheme.aum_value ? `₹${scheme.aum_value}` : t('schemeDetails.na')}
+          value={scheme.aum_value ? t('common.currencyValue', { value: scheme.aum_value }) : t('schemeDetails.na')}
         />
         <DetailCard
           icon="lock"
           label={t('schemeDetails.lockInPeriod')}
-          value={getLockInPeriodText(scheme.lock_in_period)}
+          value={getLockInPeriodText(scheme.lock_in_period, t)}
         />
         <DetailCard
           icon="th-large"
@@ -64,7 +64,7 @@ export const FundDetails: React.FC<FundDetailsProps> = ({ scheme }) => {
         <DetailCard
           icon="calendar-alt"
           label={t('schemeDetails.launchDate')}
-          value={formatDate(scheme.listing_date)}
+          value={formatDate(scheme.listing_date, t)}
         />
         <DetailCard
           icon="university"

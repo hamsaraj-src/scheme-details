@@ -70,7 +70,7 @@ export const NavGraph: React.FC<NavGraphProps> = ({
         <Text style={styles.returnTitle}>{t('navGraph.returnLabel')}</Text>
         <View style={styles.returnRow}>
           <Text style={[styles.returnPct, { color: returnPct >= 0 ? Colors.positive : Colors.negative }]}>
-            {returnPct >= 0 ? '+' : ''}{returnPct.toFixed(2)}%
+            {returnPct >= 0 ? t('common.positivePercent', { value: returnPct.toFixed(2) }) : t('common.negativePercent', { value: returnPct.toFixed(2) })}
           </Text>
           <Text style={styles.returnPeriod}>{t(PERIOD_RETURN_KEYS[selectedPeriod] || 'navGraph.periodReturnDefault')}</Text>
         </View>
@@ -81,7 +81,7 @@ export const NavGraph: React.FC<NavGraphProps> = ({
         <View style={[styles.tooltip, { left: Math.min(Math.max(touchInfo.x - 50, 0), GRAPH_WIDTH - 120) }]}>
           <View style={styles.tooltipInner}>
             <View style={styles.tooltipDot} />
-            <Text style={styles.tooltipNav}>{t('navGraph.navLabel')}:₹{touchInfo.nav.toFixed(2)}</Text>
+            <Text style={styles.tooltipNav}>{t('format.labelValue', { label: t('navGraph.navLabel'), value: t('common.currencyValue', { value: touchInfo.nav.toFixed(2) }) })}</Text>
           </View>
           <Text style={styles.tooltipDate}>{formatShortDate(touchInfo.date)}</Text>
         </View>
@@ -131,8 +131,8 @@ export const NavGraph: React.FC<NavGraphProps> = ({
 
       {/* Min / Max labels */}
       <View style={styles.graphLabels}>
-        <Text style={styles.graphLabel}>₹{minNav.toFixed(2)}</Text>
-        <Text style={styles.graphLabel}>₹{maxNav.toFixed(2)}</Text>
+        <Text style={styles.graphLabel}>{t('common.currencyValue', { value: minNav.toFixed(2) })}</Text>
+        <Text style={styles.graphLabel}>{t('common.currencyValue', { value: maxNav.toFixed(2) })}</Text>
       </View>
 
       {/* Period selector */}
@@ -161,11 +161,11 @@ export const NavGraph: React.FC<NavGraphProps> = ({
       <View style={styles.minAmountRow}>
         <View style={styles.minAmountCol}>
           <Text style={styles.minAmountLabel}>{t('navGraph.minOneTimeAmount')}</Text>
-          <Text style={styles.minAmountValue}>₹ {minInvestment?.toLocaleString('en-IN') ?? t('schemeDetails.na')}</Text>
+          <Text style={styles.minAmountValue}>{minInvestment != null ? t('common.currencyValueSpaced', { value: minInvestment.toLocaleString('en-IN') }) : t('schemeDetails.na')}</Text>
         </View>
         <View style={styles.minAmountColRight}>
           <Text style={styles.minAmountLabel}>{t('navGraph.minSIPAmount')}</Text>
-          <Text style={styles.minAmountValue}>₹ {minSipAmount ?? t('schemeDetails.na')}/{t('navGraph.perDay')}</Text>
+          <Text style={styles.minAmountValue}>{minSipAmount != null ? t('format.currencyPerDay', { currency: t('common.rupee'), value: minSipAmount.toLocaleString('en-IN'), unit: t('navGraph.perDay') }) : t('schemeDetails.na')}</Text>
         </View>
       </View>
     </View>

@@ -48,7 +48,7 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
   const navChangeNum = parseFloat(perDayNav) || 0;
   const isPositive = navChangeNum >= 0;
   const ratingStars = parseInt(fundRating, 10) || 0;
-  const formattedNavDate = formatDate(navDate);
+  const formattedNavDate = formatDate(navDate, t);
   const safeNavValue = typeof navValue === 'number' ? navValue : 0;
   const safeOneYearReturn = typeof oneYearReturn === 'number' ? oneYearReturn : 0;
 
@@ -57,12 +57,16 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
       {/* Tags row + bookmark */}
       <View style={styles.tagsBookmarkRow}>
         <View style={styles.tagsRow}>
-          <View style={styles.tag}>
-            <Text style={styles.tagText}>{categoryName}</Text>
-          </View>
-          <View style={styles.tag}>
-            <Text style={styles.tagText}>{subCategoryName}</Text>
-          </View>
+          {categoryName ? (
+            <View style={styles.tag}>
+              <Text style={styles.tagText}>{categoryName}</Text>
+            </View>
+          ) : null}
+          {subCategoryName ? (
+            <View style={styles.tag}>
+              <Text style={styles.tagText}>{subCategoryName}</Text>
+            </View>
+          ) : null}
           <View style={styles.tag}>
             <Text style={styles.tagText}>{planType || t('schemeDetails.growth')}</Text>
           </View>
@@ -89,7 +93,7 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
             end={{ x: 1, y: 0 }}
             style={styles.resilientBadge}
           >
-            <Text style={styles.resilientIcon}>✦</Text>
+            <Text style={styles.resilientIcon}>{t('common.sparkleIcon')}</Text>
             <Text style={styles.resilientText}>{t('schemeDetails.resilient')}</Text>
           </LinearGradient>
         </View>
@@ -99,23 +103,29 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
       <View style={styles.infoRow}>
         <View style={styles.infoCol}>
           <Text style={styles.infoLabel}>
-            {t('schemeDetails.nav')} : {formattedNavDate}
+            {t('format.navWithDate', { label: t('schemeDetails.nav'), date: formattedNavDate })}
           </Text>
           <View style={styles.navValueRow}>
-            <Text style={styles.navValue}>₹{safeNavValue.toFixed(4)}</Text>
+            <Text style={styles.navValue}>{t('common.currencyValue', { value: safeNavValue.toFixed(4) })}</Text>
             <Text
               style={[
                 styles.navChange,
                 { color: isPositive ? Colors.positive : Colors.negative },
               ]}
             >
-              {' '}▲ ₹{perDayNav} (+{perDayNavPercentage}%)
+              {' '}{t('format.navChange', {
+                arrow: isPositive ? t('common.arrowUp') : t('common.arrowDown'),
+                currency: t('common.rupee'),
+                change: perDayNav || t('common.defaultAmount'),
+                sign: isPositive ? '+' : '',
+                percentage: perDayNavPercentage || t('common.defaultAmount'),
+              })}
             </Text>
           </View>
         </View>
         <View style={styles.infoColRight}>
           <Text style={styles.infoLabel}>{t('schemeDetails.aum')}</Text>
-          <Text style={styles.infoValueBold}>₹{aumValue}</Text>
+          <Text style={styles.infoValueBold}>{t('common.currencyValue', { value: aumValue })}</Text>
         </View>
       </View>
 
@@ -124,7 +134,7 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
         <View style={styles.infoCol}>
           <Text style={styles.infoLabel}>{t('schemeDetails.oneYrReturn')}</Text>
           <Text style={styles.infoValueBoldGreen}>
-            {safeOneYearReturn.toFixed(2)}%
+            {t('common.percentValue', { value: safeOneYearReturn.toFixed(2) })}
           </Text>
         </View>
         <View style={styles.infoColRight}>
@@ -137,7 +147,7 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
       <View style={styles.infoRow}>
         <View style={styles.infoCol}>
           <Text style={styles.infoLabel}>{t('schemeDetails.oneYrBenchmarkReturn')}</Text>
-          <Text style={styles.infoValueBoldGreen}>{safeOneYearReturn.toFixed(2)}%</Text>
+          <Text style={styles.infoValueBoldGreen}>{t('schemeDetails.na')}</Text>
         </View>
         <View style={styles.infoColRight}>
           <Text style={styles.infoLabel}>{t('schemeDetails.valueResearchRating')}</Text>
@@ -150,7 +160,7 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
                   { color: star <= ratingStars ? Colors.starFilled : Colors.starEmpty },
                 ]}
               >
-                ★
+                {t('common.starIcon')}
               </Text>
             ))}
           </View>
@@ -160,7 +170,7 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
       {/* Description */}
       {schemeDescription ? (
         <Text style={styles.description}>
-          "{schemeDescription}"
+          {t('format.quotedText', { text: schemeDescription })}
         </Text>
       ) : null}
     </View>

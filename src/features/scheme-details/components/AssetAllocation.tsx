@@ -52,7 +52,7 @@ export const AssetAllocation: React.FC<AssetAllocationProps> = ({ assets }) => {
             />
             <Text style={styles.assetName}>{asset.asset_name}</Text>
           </View>
-          <Text style={styles.percentage}>{asset.asset_percentage.toFixed(2)}%</Text>
+          <Text style={styles.percentage}>{t('common.percentValue', { value: asset.asset_percentage.toFixed(2) })}</Text>
         </View>
       ))}
     </View>

@@ -188,6 +188,32 @@
     "percentage": "%",
     "rupee": "₹",
     "since": "Since",
-    "na": "N/A"
+    "na": "N/A",
+    "currencyValue": "₹{{value}}",
+    "currencyValueSpaced": "₹ {{value}}",
+    "percentValue": "{{value}}%",
+    "positivePercent": "+{{value}}%",
+    "negativePercent": "{{value}}%",
+    "starIcon": "★",
+    "sparkleIcon": "✦",
+    "arrowUp": "▲",
+    "arrowDown": "▼",
+    "defaultAmount": "0.00",
+    "crores": "Cr",
+    "lakhs": "L",
+    "years": "Year",
+    "yearsPlural": "Years",
+    "days": "Days",
+    "none": "None",
+    "yearShort": "Y",
+    "dayShort": "D"
+  },
+  "format": {
+    "navWithDate": "{{label}} : {{date}}",
+    "navChange": "{{arrow}} {{currency}}{{change}} ({{sign}}{{percentage}}%)",
+    "quotedText": "\"{{text}}\"",
+    "labelValue": "{{label}} : {{value}}",
+    "currencyPerDay": "{{currency}} {{value}}/{{unit}}",
+    "tenure": "{{startMonth}} {{startYear}} - {{present}} | {{years}} {{yearsLabel}}"
   }
 }

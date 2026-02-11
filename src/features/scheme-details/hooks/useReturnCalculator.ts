@@ -20,7 +20,6 @@ interface UseReturnCalculatorParams {
   fiveYearReturn: number;
   threeMonthReturn: number;
   sixMonthReturn: number;
-  minInvestment: number;
 }
 
 export const formatIndian = (num: number): string => {

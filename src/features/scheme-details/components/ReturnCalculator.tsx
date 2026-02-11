@@ -30,8 +30,6 @@ export const ReturnCalculator: React.FC<ReturnCalculatorProps> = ({
   fiveYearReturn,
   threeMonthReturn,
   sixMonthReturn,
-  minInvestment,
-  minSipAmount,
 }) => {
   const { t } = useTranslation();
   const {
@@ -51,7 +49,6 @@ export const ReturnCalculator: React.FC<ReturnCalculatorProps> = ({
     fiveYearReturn,
     threeMonthReturn,
     sixMonthReturn,
-    minInvestment,
   });
 
   return (
@@ -72,7 +69,7 @@ export const ReturnCalculator: React.FC<ReturnCalculatorProps> = ({
           {isSIP ? t('returnCalculator.monthlySIPAmount') : t('returnCalculator.oneTimeAmount')}
         </Text>
         <View style={styles.amountBadge}>
-          <Text style={styles.amountBadgeText}>₹{formatIndian(amount)}</Text>
+          <Text style={styles.amountBadgeText}>{t('common.currencyValue', { value: formatIndian(amount) })}</Text>
         </View>
       </View>
 
@@ -100,12 +97,12 @@ export const ReturnCalculator: React.FC<ReturnCalculatorProps> = ({
       {/* Results */}
       <View style={styles.resultContainer}>
         <Text style={styles.resultLine}>
-          {t('returnCalculator.totalInvestment')}  <Text style={styles.resultBold}>₹{formatIndian(totalInvested)}</Text>
+          {t('returnCalculator.totalInvestment')}  <Text style={styles.resultBold}>{t('common.currencyValue', { value: formatIndian(totalInvested) })}</Text>
         </Text>
         <Text style={styles.resultLine}>
           <Text style={styles.resultBold}>{t('returnCalculator.wouldHaveBecome')} </Text>
           <Text style={styles.resultGreen}>
-            ₹{formatIndian(estimatedValue)} ({returnPct >= 0 ? '+' : ''}{returnPct.toFixed(2)}%)
+            {t('common.currencyValue', { value: formatIndian(estimatedValue) })} ({returnPct >= 0 ? t('common.positivePercent', { value: returnPct.toFixed(2) }) : t('common.negativePercent', { value: returnPct.toFixed(2) })})
           </Text>
         </Text>
       </View>

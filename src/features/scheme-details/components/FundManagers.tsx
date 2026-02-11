@@ -17,8 +17,10 @@ interface FundManagersProps {
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
-const getInitials = (name: string): string =>
-  name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase();
+const getInitials = (name: string): string => {
+  if (!name) return '';
+  return name.split(' ').filter(Boolean).map((n) => n[0]).join('').slice(0, 2).toUpperCase();
+};
 
 const formatTenure = (dateFrom: string, t: (key: string, opts?: Record<string, unknown>) => string): string => {
   const from = new Date(dateFrom);
@@ -26,7 +28,13 @@ const formatTenure = (dateFrom: string, t: (key: string, opts?: Record<string, u
   const years = Math.floor((now.getTime() - from.getTime()) / (365.25 * 24 * 60 * 60 * 1000));
   const startMonth = MONTHS[from.getMonth()];
   const startYear = from.getFullYear();
-  return `${startMonth} ${startYear} - ${t('fundManagers.present')} | ${years} ${t('fundManagers.years')}`;
+  return t('format.tenure', {
+    startMonth,
+    startYear,
+    present: t('fundManagers.present'),
+    years,
+    yearsLabel: t('fundManagers.years'),
+  });
 };
 
 export const FundManagers: React.FC<FundManagersProps> = ({ managers }) => {

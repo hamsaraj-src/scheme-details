@@ -63,14 +63,14 @@ export const AnalyticsData: React.FC<AnalyticsDataProps> = ({ analytics }) => {
   const { t } = useTranslation();
 
   const items = useMemo(() => [
-    { key: 'beta', label: t('analytics.beta'), value: formatNumber(analytics.beta), raw: parseFloat(analytics.beta) || 0, icon: 'bold' },
-    { key: 'standardDeviation', label: t('analytics.standardDeviation'), value: `${formatNumber(analytics.standard_deviation)}%`, raw: parseFloat(analytics.standard_deviation) || 0, icon: 'chart-area' },
-    { key: 'sharpeRatio', label: t('analytics.sharpeRatio'), value: formatNumber(analytics.sharpe_ratio), raw: parseFloat(analytics.sharpe_ratio) || 0, icon: 'percentage' },
-    { key: 'alpha', label: t('analytics.alpha'), value: formatNumber(analytics.alpha), raw: parseFloat(analytics.alpha) || 0, icon: 'font' },
-    { key: 'sortinoRatio', label: t('analytics.sortinoRatio'), value: formatNumber(analytics.sortino_ratio), raw: parseFloat(analytics.sortino_ratio) || 0, icon: 'arrow-up' },
-    { key: 'treynor', label: t('analytics.treynor'), value: formatNumber(analytics.treynor), raw: parseFloat(analytics.treynor) || 0, icon: 'gem' },
-    { key: 'informationRatio', label: t('analytics.informationRatio'), value: formatNumber(analytics.information_ratio), raw: parseFloat(analytics.information_ratio) || 0, icon: 'info-circle' },
-    { key: 'rsquared', label: t('analytics.rSquared'), value: formatNumber(analytics.rsquared), raw: parseFloat(analytics.rsquared) || 0, icon: 'bullseye' },
+    { key: 'beta', label: t('analytics.beta'), value: formatNumber(analytics.beta, t), raw: parseFloat(analytics.beta) || 0, icon: 'bold' },
+    { key: 'standardDeviation', label: t('analytics.standardDeviation'), value: t('common.percentValue', { value: formatNumber(analytics.standard_deviation, t) }), raw: parseFloat(analytics.standard_deviation) || 0, icon: 'chart-area' },
+    { key: 'sharpeRatio', label: t('analytics.sharpeRatio'), value: formatNumber(analytics.sharpe_ratio, t), raw: parseFloat(analytics.sharpe_ratio) || 0, icon: 'percentage' },
+    { key: 'alpha', label: t('analytics.alpha'), value: formatNumber(analytics.alpha, t), raw: parseFloat(analytics.alpha) || 0, icon: 'font' },
+    { key: 'sortinoRatio', label: t('analytics.sortinoRatio'), value: formatNumber(analytics.sortino_ratio, t), raw: parseFloat(analytics.sortino_ratio) || 0, icon: 'arrow-up' },
+    { key: 'treynor', label: t('analytics.treynor'), value: formatNumber(analytics.treynor, t), raw: parseFloat(analytics.treynor) || 0, icon: 'gem' },
+    { key: 'informationRatio', label: t('analytics.informationRatio'), value: formatNumber(analytics.information_ratio, t), raw: parseFloat(analytics.information_ratio) || 0, icon: 'info-circle' },
+    { key: 'rsquared', label: t('analytics.rSquared'), value: formatNumber(analytics.rsquared, t), raw: parseFloat(analytics.rsquared) || 0, icon: 'bullseye' },
   ], [analytics, t]);
 
   return (

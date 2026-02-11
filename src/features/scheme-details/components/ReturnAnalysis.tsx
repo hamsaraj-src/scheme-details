@@ -22,6 +22,7 @@ const AnimatedBar: React.FC<{
   value: number;
   animKey: string;
 }> = ({ height, index, value, animKey }) => {
+  const { t } = useTranslation();
   const progress = useSharedValue(0);
 
   useEffect(() => {
@@ -43,7 +44,7 @@ const AnimatedBar: React.FC<{
   return (
     <View style={styles.barCol}>
       <Animated.Text style={[styles.barValueLabel, labelStyle]}>
-        {Math.round(value)}%
+        {t('common.percentValue', { value: Math.round(value) })}
       </Animated.Text>
       <Animated.View
         style={[
@@ -100,7 +101,7 @@ export const ReturnAnalysis: React.FC<ReturnAnalysisProps> = ({
           {/* Y-axis labels */}
           <View style={styles.yAxis}>
             {yLabels.map((label) => (
-              <Text key={label} style={styles.yLabel}>{label}%</Text>
+              <Text key={label} style={styles.yLabel}>{t('common.percentValue', { value: label })}</Text>
             ))}
           </View>
 

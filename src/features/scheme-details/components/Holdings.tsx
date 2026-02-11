@@ -31,8 +31,9 @@ export const Holdings: React.FC<HoldingsProps> = ({ holdings }) => {
     : sortedHoldings.slice(0, INITIAL_COUNT);
 
   const formatValueMn = (value: number) => {
+    if (!value && value !== 0) return t('schemeDetails.na');
     const mn = value / 1000000;
-    return `₹${Math.round(mn)}`;
+    return t('common.currencyValue', { value: Math.round(mn) });
   };
 
   return (

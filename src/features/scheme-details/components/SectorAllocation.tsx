@@ -117,7 +117,7 @@ export const SectorAllocation: React.FC<SectorAllocationProps> = ({ sectors, ass
           {allSegments.map((seg) => (
             <View key={seg.name} style={styles.legendItem}>
               <View style={[styles.legendDot, { backgroundColor: seg.color }]} />
-              <Text style={styles.legendPct}>{seg.percentage.toFixed(2)}%</Text>
+              <Text style={styles.legendPct}>{t('common.percentValue', { value: seg.percentage.toFixed(2) })}</Text>
               <Text style={styles.legendName} numberOfLines={1}>{seg.name}</Text>
             </View>
           ))}
