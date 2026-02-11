@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useSchemeData } from '../hooks/useSchemeData';
 import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
+
 
 import { SchemeHeader } from '../components/SchemeHeader';
 import { Accordion } from '../components/Accordion';
@@ -102,6 +102,8 @@ export const SchemeDetailsScreen: React.FC = () => {
             latestNavDate={scheme.latest_nav_date}
             perDayNav={scheme.per_day_nav}
             perDayNavPercentage={scheme.per_day_nav_percentage}
+            minInvestment={scheme.min_investment}
+            minSipAmount={scheme.min_sip_amount}
           />
 
           {/* Return Analysis Section */}
@@ -270,11 +272,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingTop: 12,
     paddingBottom: 8,
-  },
-  objectiveText: {
-    ...Typography.body,
-    color: Colors.textSecondary,
-    lineHeight: 22,
   },
   bottomSpacer: {
     height: 16,

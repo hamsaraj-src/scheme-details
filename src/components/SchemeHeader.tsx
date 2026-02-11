@@ -137,7 +137,7 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
       <View style={styles.infoRow}>
         <View style={styles.infoCol}>
           <Text style={styles.infoLabel}>{t('schemeDetails.oneYrBenchmarkReturn')}</Text>
-          <Text style={styles.infoValueBoldGreen}>10.12%</Text>
+          <Text style={styles.infoValueBoldGreen}>{safeOneYearReturn.toFixed(2)}%</Text>
         </View>
         <View style={styles.infoColRight}>
           <Text style={styles.infoLabel}>{t('schemeDetails.valueResearchRating')}</Text>

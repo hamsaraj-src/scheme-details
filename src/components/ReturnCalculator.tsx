@@ -3,8 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
-import { formatCurrency } from '../utils/formatters';
+
 
 interface ReturnCalculatorProps {
   oneYearReturn: number;

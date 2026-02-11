@@ -1,9 +1,8 @@
-import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Canvas, Path, Skia } from '@shopify/react-native-skia';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
 
 interface SectorItem {
   sector_name: string;

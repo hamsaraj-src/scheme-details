@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
 
 interface HoldingItem {
   Company_names: string;

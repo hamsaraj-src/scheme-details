@@ -2,18 +2,17 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
 
 interface RiskometerProps {
   riskLevel: string;
 }
 
 const RISK_LEVELS = [
-  { key: 'low', label: 'Low', color: '#2E7D32', barColor: '#4CAF50' },
-  { key: 'lowToModerate', label: 'Low to Moderate', color: '#7CB342', barColor: '#8BC34A' },
-  { key: 'moderate', label: 'Moderate', color: '#F9A825', barColor: '#FFCA28' },
-  { key: 'moderatelyHigh', label: 'Moderately High', color: '#EF6C00', barColor: '#FF9800' },
-  { key: 'veryHigh', label: 'Very High', color: '#D50000', barColor: '#F44336' },
+  { key: 'low', i18nKey: 'riskometer.low', matchValue: 'low', barColor: '#4CAF50' },
+  { key: 'lowToModerate', i18nKey: 'riskometer.lowToModerate', matchValue: 'low to moderate', barColor: '#8BC34A' },
+  { key: 'moderate', i18nKey: 'riskometer.moderate', matchValue: 'moderate', barColor: '#FFCA28' },
+  { key: 'moderatelyHigh', i18nKey: 'riskometer.moderatelyHigh', matchValue: 'moderately high', barColor: '#FF9800' },
+  { key: 'veryHigh', i18nKey: 'riskometer.veryHigh', matchValue: 'very high', barColor: '#F44336' },
 ];
 
 const BADGE_COLORS: Record<string, string> = {
@@ -31,7 +30,7 @@ export const Riskometer: React.FC<RiskometerProps> = ({ riskLevel }) => {
   const activeIndex = useMemo(() => {
     const normalized = riskLevel.toLowerCase().trim();
     return RISK_LEVELS.findIndex(
-      (r) => r.label.toLowerCase() === normalized
+      (r) => r.matchValue === normalized
     );
   }, [riskLevel]);
 
@@ -68,7 +67,7 @@ export const Riskometer: React.FC<RiskometerProps> = ({ riskLevel }) => {
                 activeIndex === index && styles.activeLabelText,
               ]}
             >
-              {level.label}
+              {t(level.i18nKey)}
             </Text>
           </View>
         ))}

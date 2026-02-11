@@ -65,6 +65,8 @@
     "startSIP": "Start SIP",
     "minOneTimeAmount": "Min One Time Amount",
     "minSIPAmount": "Min SIP Amount",
+    "navLabel": "NAV",
+    "perDay": "day",
     "periodReturn1M": "1M return",
     "periodReturn3M": "3M return",
     "periodReturn6M": "6M return",
@@ -104,7 +106,7 @@
   "riskometer": {
     "title": "Riskometer",
     "low": "Low",
-    "moderatelyLow": "Moderately Low",
+    "lowToModerate": "Low to Moderate",
     "moderate": "Moderate",
     "moderatelyHigh": "Moderately High",
     "high": "High",

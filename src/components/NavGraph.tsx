@@ -33,6 +33,8 @@ interface NavGraphProps {
   latestNavDate: string;
   perDayNav: string;
   perDayNavPercentage: string;
+  minInvestment?: number;
+  minSipAmount?: number;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -111,6 +113,8 @@ export const NavGraph: React.FC<NavGraphProps> = ({
   latestNavDate,
   perDayNav,
   perDayNavPercentage,
+  minInvestment,
+  minSipAmount,
 }) => {
   const { t } = useTranslation();
   const [selectedPeriod, setSelectedPeriod] = useState<string>('MAX');
@@ -235,7 +239,7 @@ export const NavGraph: React.FC<NavGraphProps> = ({
         <View style={[styles.tooltip, { left: Math.min(Math.max(touchInfo.x - 50, 0), GRAPH_WIDTH - 120) }]}>
           <View style={styles.tooltipInner}>
             <View style={styles.tooltipDot} />
-            <Text style={styles.tooltipNav}>NAV:₹{touchInfo.nav.toFixed(2)}</Text>
+            <Text style={styles.tooltipNav}>{t('navGraph.navLabel')}:₹{touchInfo.nav.toFixed(2)}</Text>
           </View>
           <Text style={styles.tooltipDate}>{formatShortDate(touchInfo.date)}</Text>
         </View>
@@ -336,11 +340,11 @@ export const NavGraph: React.FC<NavGraphProps> = ({
       <View style={styles.minAmountRow}>
         <View style={styles.minAmountCol}>
           <Text style={styles.minAmountLabel}>{t('navGraph.minOneTimeAmount')}</Text>
-          <Text style={styles.minAmountValue}>₹ 5000</Text>
+          <Text style={styles.minAmountValue}>₹ {minInvestment?.toLocaleString('en-IN') ?? t('schemeDetails.na')}</Text>
         </View>
         <View style={styles.minAmountColRight}>
           <Text style={styles.minAmountLabel}>{t('navGraph.minSIPAmount')}</Text>
-          <Text style={styles.minAmountValue}>₹ 25/day</Text>
+          <Text style={styles.minAmountValue}>₹ {minSipAmount ?? t('schemeDetails.na')}/{t('navGraph.perDay')}</Text>
         </View>
       </View>
     </View>
