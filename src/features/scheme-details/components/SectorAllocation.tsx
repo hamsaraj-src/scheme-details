@@ -1,9 +1,15 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Canvas, Path, Skia } from '@shopify/react-native-skia';
 import { useTranslation } from 'react-i18next';
-import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
+import { Colors } from '../../../shared/constants/colors';
+import { Typography } from '../../../shared/constants/typography';
+import {
+  useSectorAllocation,
+  CHART_SIZE,
+  RADIUS,
+  INNER_RADIUS,
+} from '../hooks/useSectorAllocation';
 
 interface SectorItem {
   sector_name: string;
@@ -20,18 +26,7 @@ interface SectorAllocationProps {
   assets?: AssetItem[];
 }
 
-const CHART_SIZE = 160;
 const CENTER = CHART_SIZE / 2;
-const RADIUS = 65;
-const INNER_RADIUS = 40;
-
-const ASSET_COLORS: Record<string, string> = {
-  Equity: Colors.assetEquity,
-  Debt: Colors.assetDebt,
-  Cash: Colors.assetCash,
-  Gold: Colors.assetGold,
-  Other: Colors.assetOther,
-};
 
 const createDonutSegment = (
   startAngle: number,
@@ -64,87 +59,14 @@ const createDonutSegment = (
   return path.toSVGString();
 };
 
-const ANIM_DURATION = 700;
-
-const useDonutAnimation = (key: string) => {
-  const [progress, setProgress] = useState(0);
-  const startRef = useRef<number>(0);
-  const rafRef = useRef<number>(0);
-
-  useEffect(() => {
-    setProgress(0);
-    startRef.current = Date.now();
-
-    const animate = () => {
-      const elapsed = Date.now() - startRef.current;
-      const t = Math.min(elapsed / ANIM_DURATION, 1);
-      // ease out cubic
-      const eased = 1 - Math.pow(1 - t, 3);
-      setProgress(eased);
-      if (t < 1) {
-        rafRef.current = requestAnimationFrame(animate);
-      }
-    };
-    rafRef.current = requestAnimationFrame(animate);
-
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [key]);
-
-  return progress;
-};
-
 export const SectorAllocation: React.FC<SectorAllocationProps> = ({ sectors, assets }) => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<'asset' | 'sector'>('sector');
-  const progress = useDonutAnimation(activeTab);
-
-  // Sector segments
-  const sectorSegments = useMemo(() => {
-    const total = sectors.reduce((sum, s) => sum + s.percentage_assets, 0);
-    let angle = 0;
-    return sectors.map((sector, index) => {
-      const sweep = (sector.percentage_assets / total) * 360;
-      const start = angle;
-      angle += sweep;
-      return {
-        name: sector.sector_name,
-        percentage: sector.percentage_assets,
-        startAngle: start,
-        endAngle: angle,
-        color: Colors.sectorColors[index % Colors.sectorColors.length],
-      };
-    });
-  }, [sectors]);
-
-  // Asset segments
-  const assetSegments = useMemo(() => {
-    if (!assets || assets.length === 0) return [];
-    const total = assets.reduce((sum, a) => sum + a.asset_percentage, 0);
-    let angle = 0;
-    return assets.map((asset, index) => {
-      const sweep = (asset.asset_percentage / total) * 360;
-      const start = angle;
-      angle += sweep;
-      return {
-        name: asset.asset_name,
-        percentage: asset.asset_percentage,
-        startAngle: start,
-        endAngle: angle,
-        color: ASSET_COLORS[asset.asset_name] || Colors.sectorColors[index % Colors.sectorColors.length],
-      };
-    });
-  }, [assets]);
-
-  const allSegments = activeTab === 'sector' ? sectorSegments : assetSegments;
-
-  // Animated segments: scale start/end angles by progress
-  const animatedSegments = useMemo(() => {
-    return allSegments.map((seg) => ({
-      ...seg,
-      animStart: seg.startAngle * progress,
-      animEnd: seg.endAngle * progress,
-    }));
-  }, [allSegments, progress]);
+  const {
+    activeTab,
+    setActiveTab,
+    allSegments,
+    animatedSegments,
+  } = useSectorAllocation({ sectors, assets });
 
   return (
     <View>

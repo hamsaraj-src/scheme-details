@@ -1,11 +1,18 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useTranslation } from 'react-i18next';
-import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
-import { ToggleButtonGroup, ChipSelector } from './shared';
-
+import { Colors } from '../../../shared/constants/colors';
+import { Typography } from '../../../shared/constants/typography';
+import { ToggleButtonGroup, ChipSelector } from '../../../shared/components';
+import {
+  useReturnCalculator,
+  DURATIONS,
+  SLIDER_MIN,
+  SLIDER_MAX,
+  SLIDER_STEP,
+  formatIndian,
+} from '../hooks/useReturnCalculator';
 
 interface ReturnCalculatorProps {
   oneYearReturn: number;
@@ -17,19 +24,6 @@ interface ReturnCalculatorProps {
   minSipAmount: number;
 }
 
-const DURATIONS = [
-  { key: '1M', label: '1M', months: 1 },
-  { key: '3M', label: '3M', months: 3 },
-  { key: '6M', label: '6M', months: 6 },
-  { key: '1Y', label: '1Y', months: 12 },
-  { key: '3Y', label: '3Y', months: 36 },
-  { key: '5Y', label: '5Y', months: 60 },
-];
-
-const SLIDER_MIN = 500;
-const SLIDER_MAX = 100000;
-const SLIDER_STEP = 500;
-
 export const ReturnCalculator: React.FC<ReturnCalculatorProps> = ({
   oneYearReturn,
   threeYearReturn,
@@ -40,52 +34,25 @@ export const ReturnCalculator: React.FC<ReturnCalculatorProps> = ({
   minSipAmount,
 }) => {
   const { t } = useTranslation();
-  const [activeToggle, setActiveToggle] = useState('sip');
-  const isSIP = activeToggle === 'sip';
-  const [amount, setAmount] = useState(minInvestment);
-  const [selectedDurationKey, setSelectedDurationKey] = useState('1M');
-  const selectedDuration = DURATIONS.findIndex((d) => d.key === selectedDurationKey);
-
-  // Pick the annualized return rate based on selected duration
-  const annualReturn = useMemo(() => {
-    const months = DURATIONS[selectedDuration].months;
-    if (months <= 3) return threeMonthReturn;
-    if (months <= 6) return sixMonthReturn;
-    if (months <= 12) return oneYearReturn;
-    if (months <= 36) return threeYearReturn;
-    return fiveYearReturn;
-  }, [selectedDuration, threeMonthReturn, sixMonthReturn, oneYearReturn, threeYearReturn, fiveYearReturn]);
-
-  const { totalInvested, estimatedValue, returnPct } = useMemo(() => {
-    const months = DURATIONS[selectedDuration].months;
-    const annualRate = annualReturn / 100;
-
-    if (isSIP) {
-      const monthlyRate = annualRate / 12;
-      const invested = amount * months;
-      let futureValue: number;
-      if (monthlyRate === 0) {
-        futureValue = invested;
-      } else {
-        futureValue =
-          amount * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) *
-          (1 + monthlyRate);
-      }
-      const pct = invested > 0 ? ((futureValue - invested) / invested) * 100 : 0;
-      return { totalInvested: invested, estimatedValue: futureValue, returnPct: pct };
-    } else {
-      const invested = amount;
-      const years = months / 12;
-      const futureValue = amount * Math.pow(1 + annualRate, years);
-      const pct = invested > 0 ? ((futureValue - invested) / invested) * 100 : 0;
-      return { totalInvested: invested, estimatedValue: futureValue, returnPct: pct };
-    }
-  }, [amount, isSIP, selectedDuration, annualReturn]);
-
-  const formatIndian = (num: number) => {
-    const rounded = Math.round(num);
-    return rounded.toLocaleString('en-IN');
-  };
+  const {
+    activeToggle,
+    setActiveToggle,
+    isSIP,
+    amount,
+    setAmount,
+    selectedDurationKey,
+    setSelectedDurationKey,
+    totalInvested,
+    estimatedValue,
+    returnPct,
+  } = useReturnCalculator({
+    oneYearReturn,
+    threeYearReturn,
+    fiveYearReturn,
+    threeMonthReturn,
+    sixMonthReturn,
+    minInvestment,
+  });
 
   return (
     <View>

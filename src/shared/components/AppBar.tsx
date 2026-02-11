@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { Colors } from '../../constants/colors';
-import { Typography } from '../../constants/typography';
+import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
 
 interface AppBarAction {
   icon: string;

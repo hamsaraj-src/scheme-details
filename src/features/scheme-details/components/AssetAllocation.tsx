@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
+import { Colors } from '../../../shared/constants/colors';
+import { Typography } from '../../../shared/constants/typography';
 
 interface AssetItem {
   asset_name: string;

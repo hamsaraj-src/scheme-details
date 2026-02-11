@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
+import { Colors } from '../../../shared/constants/colors';
+import { Typography } from '../../../shared/constants/typography';
 
 interface InfoRowProps {
   label: string;

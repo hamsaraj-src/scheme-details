@@ -1,34 +1,37 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
 } from 'react-native';
 import {
   Canvas,
   Path,
   LinearGradient,
   vec,
-  Skia,
   Line as SkiaLine,
   Circle,
 } from '@shopify/react-native-skia';
-import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
-import { runOnJS } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
-import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
-import { ToggleButtonGroup, ChipSelector } from './shared';
-
-interface NavDataPoint {
-  nav: number;
-  nav_date: string;
-}
+import { Colors } from '../../../shared/constants/colors';
+import { Typography } from '../../../shared/constants/typography';
+import { ChipSelector } from '../../../shared/components';
+import {
+  useNavGraph,
+  PERIODS,
+  PERIOD_RETURN_KEYS,
+  GRAPH_WIDTH,
+  GRAPH_HEIGHT,
+  CARD_MARGIN,
+  CARD_PADDING,
+  PADDING_TOP,
+  formatShortDate,
+} from '../hooks/useNavGraph';
 
 interface NavGraphProps {
-  navData: NavDataPoint[];
+  navData: { nav: number; nav_date: string }[];
   latestNav: number;
   latestNavDate: string;
   perDayNav: string;
@@ -36,76 +39,6 @@ interface NavGraphProps {
   minInvestment?: number;
   minSipAmount?: number;
 }
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const CARD_MARGIN = 16;
-const CARD_PADDING = 16;
-const GRAPH_WIDTH = SCREEN_WIDTH - CARD_MARGIN * 2 - CARD_PADDING * 2;
-const GRAPH_HEIGHT = 220;
-const PADDING_TOP = 10;
-const PADDING_BOTTOM = 10;
-
-const PERIODS = ['1M', '3M', '6M', '1Y', '3Y', '5Y', 'MAX'] as const;
-
-const getFilteredData = (data: NavDataPoint[], period: string): NavDataPoint[] => {
-  if (!data || data.length === 0) return [];
-  const now = new Date(data[data.length - 1].nav_date);
-  let cutoffDate: Date;
-
-  switch (period) {
-    case '1M':
-      cutoffDate = new Date(now);
-      cutoffDate.setMonth(cutoffDate.getMonth() - 1);
-      break;
-    case '3M':
-      cutoffDate = new Date(now);
-      cutoffDate.setMonth(cutoffDate.getMonth() - 3);
-      break;
-    case '6M':
-      cutoffDate = new Date(now);
-      cutoffDate.setMonth(cutoffDate.getMonth() - 6);
-      break;
-    case '1Y':
-      cutoffDate = new Date(now);
-      cutoffDate.setFullYear(cutoffDate.getFullYear() - 1);
-      break;
-    case '3Y':
-      cutoffDate = new Date(now);
-      cutoffDate.setFullYear(cutoffDate.getFullYear() - 3);
-      break;
-    case '5Y':
-      cutoffDate = new Date(now);
-      cutoffDate.setFullYear(cutoffDate.getFullYear() - 5);
-      break;
-    default:
-      return data;
-  }
-
-  return data.filter((d) => new Date(d.nav_date) >= cutoffDate);
-};
-
-const getReturnPercentage = (data: NavDataPoint[]): number => {
-  if (data.length < 2) return 0;
-  const first = data[0].nav;
-  const last = data[data.length - 1].nav;
-  return ((last - first) / first) * 100;
-};
-
-const formatShortDate = (dateStr: string): string => {
-  const d = new Date(dateStr);
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  return `${d.getDate()} ${months[d.getMonth()]}'${String(d.getFullYear()).slice(2)}`;
-};
-
-const PERIOD_RETURN_KEYS: Record<string, string> = {
-  '1M': 'navGraph.periodReturn1M',
-  '3M': 'navGraph.periodReturn3M',
-  '6M': 'navGraph.periodReturn6M',
-  '1Y': 'navGraph.periodReturn1Y',
-  '3Y': 'navGraph.periodReturn3Y',
-  '5Y': 'navGraph.periodReturn5Y',
-  'MAX': 'navGraph.periodReturnMAX',
-};
 
 export const NavGraph: React.FC<NavGraphProps> = ({
   navData,
@@ -117,109 +50,18 @@ export const NavGraph: React.FC<NavGraphProps> = ({
   minSipAmount,
 }) => {
   const { t } = useTranslation();
-  const [selectedPeriod, setSelectedPeriod] = useState<string>('MAX');
-  const [touchX, setTouchX] = useState<number | null>(null);
-  const [investTab, setInvestTab] = useState<'onetime' | 'sip'>('sip');
-
-  const filteredData = useMemo(
-    () => getFilteredData(navData, selectedPeriod),
-    [navData, selectedPeriod]
-  );
-
-  const returnPct = useMemo(() => getReturnPercentage(filteredData), [filteredData]);
-
-  const { linePath, gradientPath, minNav, maxNav, points } = useMemo(() => {
-    if (filteredData.length === 0) {
-      return { linePath: '', gradientPath: '', minNav: 0, maxNav: 0, points: [] };
-    }
-
-    const navValues = filteredData.map((d) => d.nav);
-    const min = Math.min(...navValues);
-    const max = Math.max(...navValues);
-    const range = max - min || 1;
-
-    const drawHeight = GRAPH_HEIGHT - PADDING_TOP - PADDING_BOTTOM;
-
-    const pts = filteredData.map((d, i) => ({
-      x: (i / (filteredData.length - 1 || 1)) * GRAPH_WIDTH,
-      y: PADDING_TOP + drawHeight - ((d.nav - min) / range) * drawHeight,
-    }));
-
-    const path = Skia.Path.Make();
-    const gradPath = Skia.Path.Make();
-
-    if (pts.length > 1) {
-      path.moveTo(pts[0].x, pts[0].y);
-      gradPath.moveTo(pts[0].x, pts[0].y);
-
-      for (let i = 0; i < pts.length - 1; i++) {
-        const current = pts[i];
-        const next = pts[i + 1];
-        const cpx1 = current.x + (next.x - current.x) / 3;
-        const cpy1 = current.y;
-        const cpx2 = next.x - (next.x - current.x) / 3;
-        const cpy2 = next.y;
-        path.cubicTo(cpx1, cpy1, cpx2, cpy2, next.x, next.y);
-        gradPath.cubicTo(cpx1, cpy1, cpx2, cpy2, next.x, next.y);
-      }
-
-      gradPath.lineTo(pts[pts.length - 1].x, GRAPH_HEIGHT);
-      gradPath.lineTo(pts[0].x, GRAPH_HEIGHT);
-      gradPath.close();
-    }
-
-    return {
-      linePath: path.toSVGString(),
-      gradientPath: gradPath.toSVGString(),
-      minNav: min,
-      maxNav: max,
-      points: pts,
-    };
-  }, [filteredData]);
-
-  // Find the closest data point to touch position
-  const touchInfo = useMemo(() => {
-    if (touchX === null || points.length === 0 || filteredData.length === 0) return null;
-    let closestIdx = 0;
-    let closestDist = Infinity;
-    for (let i = 0; i < points.length; i++) {
-      const dist = Math.abs(points[i].x - touchX);
-      if (dist < closestDist) {
-        closestDist = dist;
-        closestIdx = i;
-      }
-    }
-    return {
-      x: points[closestIdx].x,
-      y: points[closestIdx].y,
-      nav: filteredData[closestIdx].nav,
-      date: filteredData[closestIdx].nav_date,
-    };
-  }, [touchX, points, filteredData]);
-
-  const updateTouchX = useCallback((x: number) => {
-    setTouchX(Math.max(0, Math.min(x, GRAPH_WIDTH)));
-  }, []);
-
-  const clearTouchX = useCallback(() => {
-    setTouchX(null);
-  }, []);
-
-  const composedGesture = Gesture.Pan()
-    .onBegin((e) => {
-      'worklet';
-      runOnJS(updateTouchX)(e.x);
-    })
-    .onUpdate((e) => {
-      'worklet';
-      runOnJS(updateTouchX)(e.x);
-    })
-    .onFinalize(() => {
-      'worklet';
-      runOnJS(clearTouchX)();
-    })
-    .minDistance(0)
-    .activateAfterLongPress(150);
+  const {
+    selectedPeriod,
+    handlePeriodSelect,
+    filteredData,
+    returnPct,
+    linePath,
+    gradientPath,
+    minNav,
+    maxNav,
+    touchInfo,
+    composedGesture,
+  } = useNavGraph({ navData });
 
   return (
     <View style={styles.card}>
@@ -298,7 +140,7 @@ export const NavGraph: React.FC<NavGraphProps> = ({
         <ChipSelector
           options={PERIODS.map((p) => ({ key: p, label: t(`navGraph.period${p}`) }))}
           activeKey={selectedPeriod}
-          onSelect={(key) => { setSelectedPeriod(key); setTouchX(null); }}
+          onSelect={handlePeriodSelect}
           size="small"
         />
       </View>

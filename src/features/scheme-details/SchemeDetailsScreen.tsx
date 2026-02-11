@@ -9,24 +9,27 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { useSchemeData } from '../hooks/useSchemeData';
-import { Colors } from '../constants/colors';
-import { AppBar } from '../components/shared';
-import { SchemeHeader } from '../components/SchemeHeader';
-import { Accordion } from '../components/Accordion';
-import { NavGraph } from '../components/NavGraph';
-import { FundDetails } from '../components/FundDetails';
-import { ReturnAnalysis } from '../components/ReturnAnalysis';
-import { ReturnCalculator } from '../components/ReturnCalculator';
-import { Riskometer } from '../components/Riskometer';
-import { SectorAllocation } from '../components/SectorAllocation';
-import { Holdings } from '../components/Holdings';
-import { FundManagers } from '../components/FundManagers';
-import { AnalyticsData } from '../components/AnalyticsData';
+import { useSchemeContext } from './context/SchemeContext';
+import { NavGraphProvider } from './context/NavGraphContext';
+import { ReturnAnalysisProvider } from './context/ReturnAnalysisContext';
+import { ReturnCalculatorProvider } from './context/ReturnCalculatorContext';
+import { SectorAllocationProvider } from './context/SectorAllocationContext';
+import { Colors } from '../../shared/constants/colors';
+import { AppBar, Accordion } from '../../shared/components';
+import { SchemeHeader } from './components/SchemeHeader';
+import { NavGraph } from './components/NavGraph';
+import { FundDetails } from './components/FundDetails';
+import { ReturnAnalysis } from './components/ReturnAnalysis';
+import { ReturnCalculator } from './components/ReturnCalculator';
+import { Riskometer } from './components/Riskometer';
+import { SectorAllocation } from './components/SectorAllocation';
+import { Holdings } from './components/Holdings';
+import { FundManagers } from './components/FundManagers';
+import { AnalyticsData } from './components/AnalyticsData';
 
 export const SchemeDetailsScreen: React.FC = () => {
   const { t } = useTranslation();
-  const scheme = useSchemeData();
+  const { scheme, isLoading } = useSchemeContext();
 
   const appBarActions = useMemo(() => [
     { icon: 'search' },
@@ -76,35 +79,41 @@ export const SchemeDetailsScreen: React.FC = () => {
           />
 
           {/* NAV Graph Section — standalone card, not accordion */}
-          <NavGraph
-            navData={scheme.nav_json}
-            latestNav={scheme.latest_nav}
-            latestNavDate={scheme.latest_nav_date}
-            perDayNav={scheme.per_day_nav}
-            perDayNavPercentage={scheme.per_day_nav_percentage}
-            minInvestment={scheme.min_investment}
-            minSipAmount={scheme.min_sip_amount}
-          />
+          <NavGraphProvider>
+            <NavGraph
+              navData={scheme.nav_json}
+              latestNav={scheme.latest_nav}
+              latestNavDate={scheme.latest_nav_date}
+              perDayNav={scheme.per_day_nav}
+              perDayNavPercentage={scheme.per_day_nav_percentage}
+              minInvestment={scheme.min_investment}
+              minSipAmount={scheme.min_sip_amount}
+            />
+          </NavGraphProvider>
 
           {/* Return Analysis Section */}
           <Accordion title={t('sections.returnAnalysis')}>
-            <ReturnAnalysis
-              sipReturns={scheme.sip_returns}
-              lumpsumReturns={scheme.lumpsum_return}
-            />
+            <ReturnAnalysisProvider>
+              <ReturnAnalysis
+                sipReturns={scheme.sip_returns}
+                lumpsumReturns={scheme.lumpsum_return}
+              />
+            </ReturnAnalysisProvider>
           </Accordion>
 
           {/* Return Calculator Section */}
           <Accordion title={t('sections.returnCalculator')}>
-            <ReturnCalculator
-              oneYearReturn={scheme.one_year_return}
-              threeYearReturn={scheme.three_year_return}
-              fiveYearReturn={scheme.five_year_return}
-              threeMonthReturn={scheme.three_month}
-              sixMonthReturn={scheme.six_month}
-              minInvestment={scheme.min_investment}
-              minSipAmount={scheme.min_sip_amount}
-            />
+            <ReturnCalculatorProvider minInvestment={scheme.min_investment}>
+              <ReturnCalculator
+                oneYearReturn={scheme.one_year_return}
+                threeYearReturn={scheme.three_year_return}
+                fiveYearReturn={scheme.five_year_return}
+                threeMonthReturn={scheme.three_month}
+                sixMonthReturn={scheme.six_month}
+                minInvestment={scheme.min_investment}
+                minSipAmount={scheme.min_sip_amount}
+              />
+            </ReturnCalculatorProvider>
           </Accordion>
 
           {/* Riskometer Section */}
@@ -115,10 +124,12 @@ export const SchemeDetailsScreen: React.FC = () => {
           {/* Allocation Analysis Section */}
           {scheme.mf_sector_details && scheme.mf_sector_details.length > 0 && (
             <Accordion title={t('sections.allocationAnalysis')}>
-              <SectorAllocation
-                sectors={scheme.mf_sector_details}
-                assets={scheme.holding_asset_allocation}
-              />
+              <SectorAllocationProvider>
+                <SectorAllocation
+                  sectors={scheme.mf_sector_details}
+                  assets={scheme.holding_asset_allocation}
+                />
+              </SectorAllocationProvider>
             </Accordion>
           )}
 

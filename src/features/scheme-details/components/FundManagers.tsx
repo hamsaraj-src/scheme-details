@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
-import { IconAvatar } from './shared';
+import { Colors } from '../../../shared/constants/colors';
+import { Typography } from '../../../shared/constants/typography';
+import { IconAvatar } from '../../../shared/components';
 
 interface FundManager {
   person_name: string;

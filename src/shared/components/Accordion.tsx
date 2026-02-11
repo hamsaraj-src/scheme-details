@@ -12,6 +12,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { Typography } from '../constants/typography';
 
+
 const DURATION = 300;
 const TIMING_CONFIG = { duration: DURATION, easing: Easing.bezier(0.4, 0, 0.2, 1) };
 

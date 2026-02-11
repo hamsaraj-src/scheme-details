@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { SchemeData } from '../data/schemeData';
-import { formatDate, getLockInPeriodText } from '../utils/formatters';
-import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
-import { DetailCard } from './shared';
+import { SchemeData } from '../../../data/schemeData';
+import { formatDate, getLockInPeriodText } from '../../../shared/utils/formatters';
+import { Colors } from '../../../shared/constants/colors';
+import { Typography } from '../../../shared/constants/typography';
+import { DetailCard } from '../../../shared/components';
 
 interface FundDetailsProps {
   scheme: SchemeData;

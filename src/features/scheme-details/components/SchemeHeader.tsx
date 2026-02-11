@@ -3,9 +3,9 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
-import { formatDate } from '../utils/formatters';
+import { Colors } from '../../../shared/constants/colors';
+import { Typography } from '../../../shared/constants/typography';
+import { formatDate } from '../../../shared/utils/formatters';
 
 interface SchemeHeaderProps {
   schemeName: string;

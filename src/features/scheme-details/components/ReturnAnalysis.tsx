@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Animated, {
   useSharedValue,
@@ -8,17 +8,10 @@ import Animated, {
   withDelay,
   Easing,
 } from 'react-native-reanimated';
-import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
-import { ToggleButtonGroup } from './shared';
-
-const CHART_HEIGHT = 220;
-const Y_LABEL_WIDTH = 36;
-
-interface ReturnItem {
-  month: string;
-  percentage: string | number;
-}
+import { Colors } from '../../../shared/constants/colors';
+import { Typography } from '../../../shared/constants/typography';
+import { ToggleButtonGroup } from '../../../shared/components';
+import { useReturnAnalysis, CHART_HEIGHT, Y_LABEL_WIDTH } from '../hooks/useReturnAnalysis';
 
 const BAR_DURATION = 600;
 const BAR_STAGGER = 100;
@@ -63,6 +56,11 @@ const AnimatedBar: React.FC<{
   );
 };
 
+interface ReturnItem {
+  month: string;
+  percentage: string | number;
+}
+
 interface ReturnAnalysisProps {
   sipReturns: ReturnItem[];
   lumpsumReturns: ReturnItem[];
@@ -73,39 +71,15 @@ export const ReturnAnalysis: React.FC<ReturnAnalysisProps> = ({
   lumpsumReturns,
 }) => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<'ptp' | 'sip'>('ptp');
-
-  const data = activeTab === 'ptp' ? lumpsumReturns : sipReturns;
-
-  const parsed = useMemo(() =>
-    data.map((item) => ({
-      label: item.month === 'MAX' ? 'Max' : item.month,
-      value: typeof item.percentage === 'string' ? parseFloat(item.percentage) : item.percentage,
-    })),
-    [data]
-  );
-
-  const { yLabels, maxY, minY } = useMemo(() => {
-    const values = parsed.map((d) => d.value);
-    const rawMax = Math.max(...values);
-    const rawMin = Math.min(...values, 0);
-    // Use step of 4 or 5 to keep ~6-8 labels
-    const range = rawMax - rawMin;
-    const step = range > 20 ? 4 : 2;
-    const ceilMax = Math.ceil(rawMax / step) * step + step;
-    const floorMin = Math.max(Math.floor(rawMin / step) * step, 0);
-    const labels: number[] = [];
-    for (let v = ceilMax; v >= floorMin; v -= step) {
-      labels.push(v);
-    }
-    return { yLabels: labels, maxY: ceilMax, minY: floorMin };
-  }, [parsed]);
-
-  const getBarHeight = (value: number) => {
-    const range = maxY - minY;
-    if (range === 0) return 0;
-    return ((value - minY) / range) * CHART_HEIGHT;
-  };
+  const {
+    activeTab,
+    setActiveTab,
+    parsed,
+    yLabels,
+    maxY,
+    minY,
+    getBarHeight,
+  } = useReturnAnalysis({ sipReturns, lumpsumReturns });
 
   return (
     <View>

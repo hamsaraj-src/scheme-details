@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { Colors } from '../../constants/colors';
+import { Colors } from '../constants/colors';
 
 interface IconAvatarProps {
   /** FontAwesome5 icon name — if omitted, `initials` is rendered instead */
