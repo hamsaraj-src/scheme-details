@@ -13,7 +13,7 @@ A single-screen React Native (Expo) app implementing a **Mutual Fund Scheme Deta
 | **@shopify/react-native-skia** | NAV line graph, donut chart, gradient rendering |
 | **react-native-reanimated 4.1** | Smooth animations (bar charts, accordion expand/collapse) |
 | **react-native-gesture-handler** | Touch gestures for NAV graph tooltip |
-| **i18next + react-i18next** | Internationalization (all UI labels externalized) |
+| **i18next + react-i18next** | Internationalization (English + Chinese, all UI labels externalized) |
 | **expo-linear-gradient** | Gradient backgrounds (scheme header) |
 | **@react-native-community/slider** | Amount slider in return calculator |
 | **react-native-safe-area-context** | Safe area handling |
@@ -113,6 +113,7 @@ src/
 │   │   ├── ChipSelector.tsx                 — Pill/chip row selector
 │   │   ├── IconAvatar.tsx                   — Circular icon/initials container
 │   │   ├── DetailCard.tsx                   — Icon + label + value card
+│   │   ├── LanguageToggle.tsx               — Animated EN ↔ 中文 pill toggle
 │   │   └── index.ts                         — Barrel export
 │   ├── constants/
 │   │   ├── colors.ts                        — Centralized color tokens (60+ semantic tokens)
@@ -124,8 +125,9 @@ src/
 │   └── schemeData.ts                    # Typed mock API response
 │
 └── locales/
-    ├── en.json                          # English translations (all UI labels)
-    └── i18n.ts                          # i18next configuration
+    ├── en.json                          # English translations (220+ keys)
+    ├── zh.json                          # Chinese translations (220+ keys)
+    └── i18n.ts                          # i18next config + LANGUAGES registry
 ```
 
 ### Provider Hierarchy
@@ -173,7 +175,7 @@ src/
 |---|---|
 | **Accordion Sections** | Animated expand/collapse via `react-native-reanimated`, multiple sections can be open simultaneously |
 | **NAV Graph (Skia)** | Cubic bezier smooth curve, gradient fill, period filter (1M–MAX), long-press touch tooltip with NAV value + date |
-| **i18n** | All labels externalized in `locales/en.json`, zero hardcoded strings in components |
+| **i18n** | All labels externalized in `locales/en.json` + `zh.json`, zero hardcoded strings in components, animated language toggle |
 | **Return Analysis** | Toggle between Point-to-Point & SIP returns with staggered animated bars |
 | **Return Calculator** | Monthly SIP / One-time toggle, slider for amount, duration chips, live projection with annualized returns |
 | **Riskometer** | Color-segmented risk bar with dynamic highlighting and risk level badge |
@@ -196,3 +198,62 @@ src/
 - All UI text is externalized via i18n — adding a new language requires only a new JSON translation file.
 - Color and typography tokens are centralized — no hardcoded hex values or font sizes exist in component files.
 - The mock data structure matches the expected API response shape; the `SchemeData` type is derived directly from the data.
+
+---
+
+## i18n — Internationalization
+
+The app ships with **English** (`en.json`) and **Chinese** (`zh.json`), with 220+ translation keys covering every visible label, section header, button, graph title, description, and formatted value.
+
+### Language Toggle
+
+A ready-to-use `<LanguageToggle />` component is included. It renders an animated pill-style switcher (🇬🇧 EN ↔ 🇨🇳 中文) with smooth sliding animation.
+
+**To enable it**, uncomment the following line in `src/features/scheme-details/SchemeDetailsScreen.tsx`:
+
+```tsx
+// Line ~52 — change this:
+{/* <LanguageToggle /> */}
+
+// To this:
+<LanguageToggle />
+```
+
+The toggle appears right-aligned below the AppBar title. Tapping a language instantly switches all UI text.
+
+### How to Add a New Language
+
+1. **Create a translation file** — copy `src/locales/en.json` to `src/locales/<code>.json` (e.g. `hi.json` for Hindi) and translate all values:
+
+   ```bash
+   cp src/locales/en.json src/locales/hi.json
+   ```
+
+2. **Register it in `src/locales/i18n.ts`**:
+
+   ```ts
+   import hi from './hi.json';
+
+   // Add to LANGUAGES array:
+   export const LANGUAGES = [
+     { code: 'en', label: 'EN', nativeLabel: 'English', flag: '🇬🇧' },
+     { code: 'zh', label: '中文', nativeLabel: '中文', flag: '🇨🇳' },
+     { code: 'hi', label: 'हिं', nativeLabel: 'हिन्दी', flag: '🇮🇳' },  // ← new
+   ] as const;
+
+   // Add to resources:
+   resources: {
+     en: { translation: en },
+     zh: { translation: zh },
+     hi: { translation: hi },  // ← new
+   },
+   ```
+
+3. **Done** — the `<LanguageToggle />` component automatically picks up the new language from the `LANGUAGES` array. No other changes needed.
+
+### i18n Architecture
+
+- **Zero hardcoded strings** — all visible text uses `t('key')` or `t('key', { param })` interpolation
+- **Formatter functions** (`formatters.ts`) accept a `t` function parameter so even utility-generated text (currency symbols, units, fallbacks) is localized
+- **Format templates** (`format.*` keys) externalize structural patterns like `"NAV : 01 Jan 2025"` so word order can change per language
+- **Scalable** — adding a language is a 2-step process (JSON file + registration), no component changes required

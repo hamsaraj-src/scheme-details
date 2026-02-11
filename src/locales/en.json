@@ -208,6 +208,9 @@
     "yearShort": "Y",
     "dayShort": "D"
   },
+  "languageToggle": {
+    "title": "Language"
+  },
   "format": {
     "navWithDate": "{{label}} : {{date}}",
     "navChange": "{{arrow}} {{currency}}{{change}} ({{sign}}{{percentage}}%)",

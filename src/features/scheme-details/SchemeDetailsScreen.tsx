@@ -15,7 +15,7 @@ import { ReturnAnalysisProvider } from './context/ReturnAnalysisContext';
 import { ReturnCalculatorProvider } from './context/ReturnCalculatorContext';
 import { SectorAllocationProvider } from './context/SectorAllocationContext';
 import { Colors } from '../../shared/constants/colors';
-import { AppBar, Accordion } from '../../shared/components';
+import { AppBar, Accordion, LanguageToggle } from '../../shared/components';
 import { SchemeHeader } from './components/SchemeHeader';
 import { NavGraph } from './components/NavGraph';
 import { FundDetails } from './components/FundDetails';
@@ -48,7 +48,9 @@ export const SchemeDetailsScreen: React.FC = () => {
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.headerGreen} />
 
-      <AppBar title={t('schemeDetails.title')} actions={appBarActions} />
+      <AppBar title={t('schemeDetails.title')} actions={appBarActions}>
+        {/* <LanguageToggle /> */}
+      </AppBar>
 
       <View style={styles.bodyWrapper}>
         <ScrollView

@@ -4,3 +4,4 @@ export { ChipSelector } from './ChipSelector';
 export { IconAvatar } from './IconAvatar';
 export { DetailCard } from './DetailCard';
 export { Accordion } from './Accordion';
+export { LanguageToggle } from './LanguageToggle';
