@@ -17,6 +17,7 @@
       "bundleIdentifier": "com.hamsexpo.scheme-details"
     },
     "android": {
+      "package": "com.hamsexpo.schemedetails",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
