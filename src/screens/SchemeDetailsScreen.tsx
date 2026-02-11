@@ -1,20 +1,17 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
-  Text,
   ScrollView,
   StyleSheet,
   StatusBar,
   ActivityIndicator,
-  TouchableOpacity,
   Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useSchemeData } from '../hooks/useSchemeData';
 import { Colors } from '../constants/colors';
-
-
+import { AppBar } from '../components/shared';
 import { SchemeHeader } from '../components/SchemeHeader';
 import { Accordion } from '../components/Accordion';
 import { NavGraph } from '../components/NavGraph';
@@ -26,11 +23,15 @@ import { SectorAllocation } from '../components/SectorAllocation';
 import { Holdings } from '../components/Holdings';
 import { FundManagers } from '../components/FundManagers';
 import { AnalyticsData } from '../components/AnalyticsData';
-import { FontAwesome5 } from '@expo/vector-icons';
 
 export const SchemeDetailsScreen: React.FC = () => {
   const { t } = useTranslation();
   const scheme = useSchemeData();
+
+  const appBarActions = useMemo(() => [
+    { icon: 'search' },
+    { icon: 'shopping-cart', badge: 3 },
+  ], []);
 
   if (!scheme) {
     return (
@@ -44,28 +45,7 @@ export const SchemeDetailsScreen: React.FC = () => {
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.headerGreen} />
 
-      {/* AppBar */}
-      <View style={styles.headerBar}>
-        <TouchableOpacity style={styles.backButton}>
-          <FontAwesome5 name="chevron-left" size={24} color="#FFFFFF" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle} numberOfLines={1}>
-          {t('schemeDetails.title')}
-        </Text>
-        <View style={styles.headerActions}>
-          <TouchableOpacity style={styles.headerIconBtn}>
-            <FontAwesome5 name="search" size={18} color="#FFFFFF" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cartButton}>
-            <View style={styles.cartCircle}>
-              <FontAwesome5 name="shopping-cart" size={14} color={Colors.headerGreen} />
-            </View>
-            <View style={styles.cartBadge}>
-              <Text style={styles.cartBadgeText}>3</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <AppBar title={t('schemeDetails.title')} actions={appBarActions} />
 
       <View style={styles.bodyWrapper}>
         <ScrollView
@@ -188,69 +168,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.background,
-  },
-  headerBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    backgroundColor: Colors.headerGreen,
-  },
-  backButton: {
-    width: 70,
-    paddingVertical: 6,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '500',
-    color: '#FFFFFF',
-    flex: 1,
-    textAlign: 'center',
-    letterSpacing: 0.3,
-  },
-  headerActions: {
-    flexDirection: 'row',
-    width: 70,
-    gap: 16,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  headerIconBtn: {
-    padding: 6,
-  },
-  cartButton: {
-    width: 38,
-    height: 38,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cartCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-  },
-  cartBadge: {
-    position: 'absolute',
-    top: -2,
-    right: -2,
-    backgroundColor: Colors.headerGreenLight,
-    borderWidth: 1.5,
-    borderColor: '#FFFFFF',
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cartBadgeText: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: '#FFFFFF',
   },
   bodyWrapper: {
     flex: 1,

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Animated, {
   useSharedValue,
@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Colors } from '../constants/colors';
 import { Typography } from '../constants/typography';
+import { ToggleButtonGroup } from './shared';
 
 const CHART_HEIGHT = 220;
 const Y_LABEL_WIDTH = 36;
@@ -109,24 +110,14 @@ export const ReturnAnalysis: React.FC<ReturnAnalysisProps> = ({
   return (
     <View>
       {/* Toggle tabs */}
-      <View style={styles.toggleRow}>
-        <TouchableOpacity
-          style={[styles.toggleBtn, activeTab === 'ptp' && styles.toggleBtnActive]}
-          onPress={() => setActiveTab('ptp')}
-        >
-          <Text style={[styles.toggleText, activeTab === 'ptp' && styles.toggleTextActive]}>
-            {t('returnAnalysis.pointToPoint')}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.toggleBtn, activeTab === 'sip' && styles.toggleBtnActive]}
-          onPress={() => setActiveTab('sip')}
-        >
-          <Text style={[styles.toggleText, activeTab === 'sip' && styles.toggleTextActive]}>
-            {t('returnAnalysis.sipReturns')}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <ToggleButtonGroup
+        options={[
+          { key: 'ptp', label: t('returnAnalysis.pointToPoint') },
+          { key: 'sip', label: t('returnAnalysis.sipReturns') },
+        ]}
+        activeKey={activeTab}
+        onSelect={(key) => setActiveTab(key as 'ptp' | 'sip')}
+      />
 
       {/* Bar chart */}
       <View style={styles.chartOuter}>
@@ -192,29 +183,6 @@ export const ReturnAnalysis: React.FC<ReturnAnalysisProps> = ({
 };
 
 const styles = StyleSheet.create({
-  toggleRow: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 20,
-  },
-  toggleBtn: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 10,
-    backgroundColor: '#E8F0E8',
-    alignItems: 'center',
-  },
-  toggleBtnActive: {
-    backgroundColor: Colors.headerGreen,
-  },
-  toggleText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: Colors.textSecondary,
-  },
-  toggleTextActive: {
-    color: '#FFFFFF',
-  },
   chartOuter: {
     marginTop: 4,
   },
@@ -228,10 +196,9 @@ const styles = StyleSheet.create({
     paddingRight: 4,
   },
   yLabel: {
-    fontSize: 11,
+    ...Typography.tiny,
     color: Colors.textSecondary,
     textAlign: 'right',
-    lineHeight: 14,
   },
   chartArea: {
     flex: 1,
@@ -256,8 +223,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   barValueLabel: {
-    fontSize: 11,
-    fontWeight: '700',
+    ...Typography.tinyBold,
     color: Colors.headerGreen,
     marginBottom: 4,
   },
@@ -282,7 +248,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   xLabel: {
-    fontSize: 12,
+    ...Typography.caption,
     color: Colors.textSecondary,
     fontWeight: '500',
   },

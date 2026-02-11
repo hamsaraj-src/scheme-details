@@ -2,26 +2,27 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
 
 interface RiskometerProps {
   riskLevel: string;
 }
 
 const RISK_LEVELS = [
-  { key: 'low', i18nKey: 'riskometer.low', matchValue: 'low', barColor: '#4CAF50' },
-  { key: 'lowToModerate', i18nKey: 'riskometer.lowToModerate', matchValue: 'low to moderate', barColor: '#8BC34A' },
-  { key: 'moderate', i18nKey: 'riskometer.moderate', matchValue: 'moderate', barColor: '#FFCA28' },
-  { key: 'moderatelyHigh', i18nKey: 'riskometer.moderatelyHigh', matchValue: 'moderately high', barColor: '#FF9800' },
-  { key: 'veryHigh', i18nKey: 'riskometer.veryHigh', matchValue: 'very high', barColor: '#F44336' },
+  { key: 'low', i18nKey: 'riskometer.low', matchValue: 'low', barColor: Colors.riskLowBar },
+  { key: 'lowToModerate', i18nKey: 'riskometer.lowToModerate', matchValue: 'low to moderate', barColor: Colors.riskLowToModerateBar },
+  { key: 'moderate', i18nKey: 'riskometer.moderate', matchValue: 'moderate', barColor: Colors.riskModerateBar },
+  { key: 'moderatelyHigh', i18nKey: 'riskometer.moderatelyHigh', matchValue: 'moderately high', barColor: Colors.riskModeratelyHighBar },
+  { key: 'veryHigh', i18nKey: 'riskometer.veryHigh', matchValue: 'very high', barColor: Colors.riskVeryHighBar },
 ];
 
 const BADGE_COLORS: Record<string, string> = {
-  low: '#5B8C5A',
-  'low to moderate': '#A4C639',
-  moderate: '#FFC107',
-  'moderately high': '#FF9800',
-  high: '#FF5722',
-  'very high': '#FF4081',
+  low: Colors.riskLowBadge,
+  'low to moderate': Colors.riskLowToModerateBadge,
+  moderate: Colors.riskModerateBadge,
+  'moderately high': Colors.riskModeratelyHighBadge,
+  high: Colors.riskHighBadge,
+  'very high': Colors.riskVeryHighBadge,
 };
 
 export const Riskometer: React.FC<RiskometerProps> = ({ riskLevel }) => {
@@ -34,7 +35,7 @@ export const Riskometer: React.FC<RiskometerProps> = ({ riskLevel }) => {
     );
   }, [riskLevel]);
 
-  const badgeColor = BADGE_COLORS[riskLevel.toLowerCase().trim()] || '#FF4081';
+  const badgeColor = BADGE_COLORS[riskLevel.toLowerCase().trim()] || Colors.riskVeryHighBadge;
 
   return (
     <View style={styles.container}>
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   labelText: {
-    fontSize: 11,
+    ...Typography.tiny,
     color: Colors.textSecondary,
     textAlign: 'center',
   },
@@ -139,10 +140,9 @@ const styles = StyleSheet.create({
     color: Colors.text,
   },
   disclaimer: {
-    fontSize: 14,
+    ...Typography.body,
     color: Colors.textSecondary,
     textAlign: 'center',
-    lineHeight: 20,
     marginBottom: 14,
     paddingHorizontal: 16,
   },
@@ -152,8 +152,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   riskBadgeText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    ...Typography.h3Bold,
+    color: Colors.white,
   },
 });

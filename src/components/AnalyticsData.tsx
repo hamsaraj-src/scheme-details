@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
 import { formatNumber } from '../utils/formatters';
+import { IconAvatar } from './shared';
 
 interface AnalyticsDataProps {
   analytics: {
@@ -76,9 +77,14 @@ export const AnalyticsData: React.FC<AnalyticsDataProps> = ({ analytics }) => {
     <View>
       {items.map((item) => (
         <View key={item.key} style={styles.card}>
-          <View style={styles.iconCircle}>
-            <FontAwesome5 name={item.icon} size={18} color={Colors.headerGreen} />
-          </View>
+          <IconAvatar
+            icon={item.icon}
+            size={44}
+            iconSize={18}
+            backgroundColor={Colors.surfaceGreenLight}
+            color={Colors.headerGreen}
+            style={styles.iconCircle}
+          />
           <View style={styles.content}>
             <Text style={styles.title}>
               {item.label} : {item.value}
@@ -100,26 +106,18 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   iconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#EAF4EA',
-    justifyContent: 'center',
-    alignItems: 'center',
     marginRight: 14,
   },
   content: {
     flex: 1,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '700',
+    ...Typography.h3Bold,
     color: Colors.text,
     marginBottom: 4,
   },
   description: {
-    fontSize: 13,
+    ...Typography.captionRegular,
     color: Colors.textSecondary,
-    lineHeight: 18,
   },
 });

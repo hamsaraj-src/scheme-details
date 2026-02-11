@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
 
 interface HoldingItem {
   Company_names: string;
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.divider,
   },
   headerText: {
-    fontSize: 13,
+    ...Typography.captionRegular,
     color: Colors.textSecondary,
   },
   nameCol: {
@@ -119,16 +120,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   evenRow: {
-    backgroundColor: '#F8F8F8',
+    backgroundColor: Colors.surfaceMuted,
   },
   cellText: {
-    fontSize: 15,
-    fontWeight: '600',
+    ...Typography.labelSemibold,
     color: Colors.text,
   },
   cellValue: {
-    fontSize: 15,
-    fontWeight: '600',
+    ...Typography.labelSemibold,
     color: Colors.text,
   },
   viewAllButton: {
@@ -141,8 +140,7 @@ const styles = StyleSheet.create({
     borderTopColor: Colors.divider,
   },
   viewAllText: {
-    fontSize: 14,
-    fontWeight: '600',
+    ...Typography.bodyBold,
     color: Colors.headerGreen,
   },
 });

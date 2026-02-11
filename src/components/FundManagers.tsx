@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
+import { IconAvatar } from './shared';
 
 interface FundManager {
   person_name: string;
@@ -37,9 +39,14 @@ export const FundManagers: React.FC<FundManagersProps> = ({ managers }) => {
           key={`${manager.person_name}-${index}`}
           style={styles.card}
         >
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{getInitials(manager.person_name)}</Text>
-          </View>
+          <IconAvatar
+            initials={getInitials(manager.person_name)}
+            size={48}
+            iconSize={16}
+            backgroundColor={Colors.avatarBlue}
+            color={Colors.white}
+            style={styles.avatar}
+          />
           <View style={styles.info}>
             <Text style={styles.name}>{manager.person_name},</Text>
             <Text style={styles.tenure}>{formatTenure(manager.date_from, t)}</Text>
@@ -58,33 +65,21 @@ const styles = StyleSheet.create({
   },
   cardBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    borderBottomColor: Colors.dividerLight,
   },
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#6B8FD4',
-    justifyContent: 'center',
-    alignItems: 'center',
     marginRight: 14,
-  },
-  avatarText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
   },
   info: {
     flex: 1,
   },
   name: {
-    fontSize: 16,
-    fontWeight: '600',
+    ...Typography.h3,
     color: Colors.text,
     marginBottom: 3,
   },
   tenure: {
-    fontSize: 13,
+    ...Typography.captionRegular,
     color: Colors.textSecondary,
   },
 });

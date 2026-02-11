@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
+import { ToggleButtonGroup, ChipSelector } from './shared';
 
 
 interface ReturnCalculatorProps {
@@ -16,12 +18,12 @@ interface ReturnCalculatorProps {
 }
 
 const DURATIONS = [
-  { label: '1M', months: 1 },
-  { label: '3M', months: 3 },
-  { label: '6M', months: 6 },
-  { label: '1Y', months: 12 },
-  { label: '3Y', months: 36 },
-  { label: '5Y', months: 60 },
+  { key: '1M', label: '1M', months: 1 },
+  { key: '3M', label: '3M', months: 3 },
+  { key: '6M', label: '6M', months: 6 },
+  { key: '1Y', label: '1Y', months: 12 },
+  { key: '3Y', label: '3Y', months: 36 },
+  { key: '5Y', label: '5Y', months: 60 },
 ];
 
 const SLIDER_MIN = 500;
@@ -38,9 +40,11 @@ export const ReturnCalculator: React.FC<ReturnCalculatorProps> = ({
   minSipAmount,
 }) => {
   const { t } = useTranslation();
-  const [isSIP, setIsSIP] = useState(true);
+  const [activeToggle, setActiveToggle] = useState('sip');
+  const isSIP = activeToggle === 'sip';
   const [amount, setAmount] = useState(minInvestment);
-  const [selectedDuration, setSelectedDuration] = useState(0);
+  const [selectedDurationKey, setSelectedDurationKey] = useState('1M');
+  const selectedDuration = DURATIONS.findIndex((d) => d.key === selectedDurationKey);
 
   // Pick the annualized return rate based on selected duration
   const annualReturn = useMemo(() => {
@@ -86,24 +90,14 @@ export const ReturnCalculator: React.FC<ReturnCalculatorProps> = ({
   return (
     <View>
       {/* Monthly SIP / One Time toggle */}
-      <View style={styles.toggleRow}>
-        <TouchableOpacity
-          style={[styles.toggleBtn, isSIP && styles.toggleBtnActive]}
-          onPress={() => setIsSIP(true)}
-        >
-          <Text style={[styles.toggleText, isSIP && styles.toggleTextActive]}>
-            {t('returnCalculator.monthlySIP')}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.toggleBtn, !isSIP && styles.toggleBtnActive]}
-          onPress={() => setIsSIP(false)}
-        >
-          <Text style={[styles.toggleText, !isSIP && styles.toggleTextActive]}>
-            {t('returnCalculator.oneTime')}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <ToggleButtonGroup
+        options={[
+          { key: 'sip', label: t('returnCalculator.monthlySIP') },
+          { key: 'onetime', label: t('returnCalculator.oneTime') },
+        ]}
+        activeKey={activeToggle}
+        onSelect={setActiveToggle}
+      />
 
       {/* Amount label + badge */}
       <View style={styles.amountRow}>
@@ -124,25 +118,17 @@ export const ReturnCalculator: React.FC<ReturnCalculatorProps> = ({
         value={amount}
         onValueChange={(val: number) => setAmount(val)}
         minimumTrackTintColor={Colors.headerGreen}
-        maximumTrackTintColor="#E0E0E0"
-        thumbTintColor="#FFFFFF"
+        maximumTrackTintColor={Colors.border}
+        thumbTintColor={Colors.white}
       />
 
       {/* Select Duration */}
       <Text style={styles.durationTitle}>{t('returnCalculator.selectDuration')}</Text>
-      <View style={styles.durationRow}>
-        {DURATIONS.map((d, i) => (
-          <TouchableOpacity
-            key={d.label}
-            style={[styles.durationChip, selectedDuration === i && styles.durationChipActive]}
-            onPress={() => setSelectedDuration(i)}
-          >
-            <Text style={[styles.durationText, selectedDuration === i && styles.durationTextActive]}>
-              {d.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <ChipSelector
+        options={DURATIONS.map((d) => ({ key: d.key, label: d.label }))}
+        activeKey={selectedDurationKey}
+        onSelect={setSelectedDurationKey}
+      />
 
       {/* Results */}
       <View style={styles.resultContainer}>
@@ -161,29 +147,6 @@ export const ReturnCalculator: React.FC<ReturnCalculatorProps> = ({
 };
 
 const styles = StyleSheet.create({
-  toggleRow: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 20,
-  },
-  toggleBtn: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 10,
-    backgroundColor: '#E8F0E8',
-    alignItems: 'center',
-  },
-  toggleBtnActive: {
-    backgroundColor: Colors.headerGreen,
-  },
-  toggleText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: Colors.textSecondary,
-  },
-  toggleTextActive: {
-    color: '#FFFFFF',
-  },
   amountRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -191,8 +154,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   amountLabel: {
-    fontSize: 15,
-    fontWeight: '600',
+    ...Typography.labelSemibold,
     color: Colors.text,
   },
   amountBadge: {
@@ -202,9 +164,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   amountBadgeText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    ...Typography.h3Bold,
+    color: Colors.white,
   },
   slider: {
     width: '100%',
@@ -212,44 +173,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   durationTitle: {
-    fontSize: 15,
-    fontWeight: '600',
+    ...Typography.labelSemibold,
     color: Colors.text,
     marginBottom: 12,
   },
-  durationRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  durationChip: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#D0D0D0',
-    backgroundColor: '#FFFFFF',
-  },
-  durationChipActive: {
-    backgroundColor: Colors.headerGreen,
-    borderColor: Colors.headerGreen,
-  },
-  durationText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: Colors.textSecondary,
-  },
-  durationTextActive: {
-    color: '#FFFFFF',
-  },
   resultContainer: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.surfaceLight,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
   },
   resultLine: {
-    fontSize: 15,
+    ...Typography.labelRegular,
     color: Colors.textSecondary,
     marginBottom: 8,
     textAlign: 'center',

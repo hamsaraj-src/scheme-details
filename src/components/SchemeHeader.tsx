@@ -84,7 +84,7 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
             {schemeName}
           </Text>
           <LinearGradient
-            colors={['#2E9E6B', '#2979E5']}
+            colors={[Colors.resilientGradientStart, Colors.resilientGradientEnd]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={styles.resilientBadge}
@@ -169,7 +169,7 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#EAF4EA',
+    backgroundColor: Colors.surfaceGreenLight,
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 18,
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderRadius: 16,
     elevation: 6,
-    shadowColor: '#000',
+    shadowColor: Colors.shadow,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.18,
     shadowRadius: 12,
@@ -224,16 +224,14 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
     marginRight: 12,
     marginTop: 2,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.amcImageBorder,
   },
   schemeInfo: {
     flex: 1,
   },
   schemeName: {
-    fontSize: 18,
-    fontWeight: '700',
+    ...Typography.h2,
     color: Colors.text,
-    lineHeight: 24,
     marginBottom: 6,
   },
   resilientBadge: {
@@ -246,14 +244,13 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   resilientIcon: {
-    fontSize: 12,
-    color: '#FFFFFF',
+    ...Typography.caption,
+    color: Colors.white,
     marginRight: 4,
   },
   resilientText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    ...Typography.tinyBold,
+    color: Colors.white,
     letterSpacing: 0.5,
   },
   infoRow: {
@@ -279,22 +276,18 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   navValue: {
-    fontSize: 20,
-    fontWeight: '700',
+    ...Typography.h1,
     color: Colors.text,
   },
   navChange: {
-    fontSize: 13,
-    fontWeight: '600',
+    ...Typography.captionMedium,
   },
   infoValueBold: {
-    fontSize: 15,
-    fontWeight: '700',
+    ...Typography.label,
     color: Colors.text,
   },
   infoValueBoldGreen: {
-    fontSize: 18,
-    fontWeight: '700',
+    ...Typography.h2,
     color: Colors.text,
   },
   starsRow: {
@@ -302,7 +295,7 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   starIcon: {
-    fontSize: 18,
+    fontSize: Typography.h2.fontSize,
   },
   description: {
     ...Typography.body,

@@ -43,7 +43,7 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#F0F0F0',
+    backgroundColor: Colors.dividerLight,
     borderRadius: 8,
     padding: 3,
     marginBottom: 12,

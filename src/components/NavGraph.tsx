@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  TouchableOpacity,
 } from 'react-native';
 import {
   Canvas,
@@ -21,6 +20,7 @@ import { runOnJS } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../constants/colors';
 import { Typography } from '../constants/typography';
+import { ToggleButtonGroup, ChipSelector } from './shared';
 
 interface NavDataPoint {
   nav: number;
@@ -276,7 +276,7 @@ export const NavGraph: React.FC<NavGraphProps> = ({
                   strokeWidth={1}
                 />
                 <Circle cx={touchInfo.x} cy={touchInfo.y} r={5} color={Colors.graphLine} />
-                <Circle cx={touchInfo.x} cy={touchInfo.y} r={3} color="#FFFFFF" />
+                <Circle cx={touchInfo.x} cy={touchInfo.y} r={3} color={Colors.white} />
               </>
             )}
           </Canvas>
@@ -295,46 +295,25 @@ export const NavGraph: React.FC<NavGraphProps> = ({
 
       {/* Period selector */}
       <View style={styles.periodContainer}>
-        {PERIODS.map((period) => (
-          <TouchableOpacity
-            key={period}
-            style={[
-              styles.periodChip,
-              selectedPeriod === period && styles.activePeriodChip,
-            ]}
-            onPress={() => { setSelectedPeriod(period); setTouchX(null); }}
-          >
-            <Text
-              style={[
-                styles.periodText,
-                selectedPeriod === period && styles.activePeriodText,
-              ]}
-            >
-              {t(`navGraph.period${period}`)}
-            </Text>
-          </TouchableOpacity>
-        ))}
+        <ChipSelector
+          options={PERIODS.map((p) => ({ key: p, label: t(`navGraph.period${p}`) }))}
+          activeKey={selectedPeriod}
+          onSelect={(key) => { setSelectedPeriod(key); setTouchX(null); }}
+          size="small"
+        />
       </View>
 
       {/* One Time / Start SIP toggle */}
-      <View style={styles.investToggleRow}>
-        <TouchableOpacity
-          style={[styles.investToggle, investTab === 'onetime' ? styles.investToggleActive : styles.investToggleInactive]}
-          onPress={() => setInvestTab('onetime')}
-        >
-          <Text style={[styles.investToggleText, investTab === 'onetime' && styles.investToggleTextActive]}>
-            {t('navGraph.oneTime')}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.investToggle, investTab === 'sip' ? styles.investToggleActive : styles.investToggleInactive]}
-          onPress={() => setInvestTab('sip')}
-        >
-          <Text style={[styles.investToggleText, investTab === 'sip' && styles.investToggleTextActive]}>
-            {t('navGraph.startSIP')}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {/* <View style={styles.investToggleRow}>
+        <ToggleButtonGroup
+          options={[
+            { key: 'onetime', label: t('navGraph.oneTime') },
+            { key: 'sip', label: t('navGraph.startSIP') },
+          ]}
+          activeKey={investTab}
+          onSelect={(key) => setInvestTab(key as 'onetime' | 'sip')}
+        />
+      </View> */}
 
       {/* Min amounts */}
       <View style={styles.minAmountRow}>
@@ -358,7 +337,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#E8E8E8',
+    borderColor: Colors.borderLight,
     paddingTop: 16,
     paddingHorizontal: CARD_PADDING,
     paddingBottom: 14,
@@ -367,8 +346,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   returnTitle: {
-    fontSize: 16,
-    fontWeight: '700',
+    ...Typography.h3Bold,
     color: Colors.text,
     marginBottom: 4,
   },
@@ -378,8 +356,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   returnPct: {
-    fontSize: 18,
-    fontWeight: '700',
+    ...Typography.h2,
   },
   returnPeriod: {
     ...Typography.caption,
@@ -389,11 +366,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 50,
     zIndex: 10,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: Colors.tooltipBackground,
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 6,
-    shadowColor: '#000',
+    shadowColor: Colors.shadow,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.12,
     shadowRadius: 4,
@@ -411,12 +388,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.graphLine,
   },
   tooltipNav: {
-    fontSize: 14,
-    fontWeight: '700',
+    ...Typography.bodyStrong,
     color: Colors.text,
   },
   tooltipDate: {
-    fontSize: 12,
+    ...Typography.caption,
     color: Colors.textSecondary,
     marginTop: 2,
     marginLeft: 14,
@@ -443,61 +419,17 @@ const styles = StyleSheet.create({
     color: Colors.textLight,
   },
   periodContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     marginTop: 4,
   },
-  periodChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    backgroundColor: Colors.chipInactive,
-  },
-  activePeriodChip: {
-    backgroundColor: Colors.chipActive,
-    borderWidth: 1,
-    borderColor: Colors.primary,
-  },
-  periodText: {
-    ...Typography.captionBold,
-    color: Colors.textSecondary,
-  },
-  activePeriodText: {
-    color: Colors.primary,
-  },
   investToggleRow: {
-    flexDirection: 'row',
     marginTop: 16,
-    gap: 12,
-  },
-  investToggle: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 10,
-    backgroundColor: '#E8F0E8',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  investToggleActive: {
-    backgroundColor: Colors.headerGreen,
-  },
-  investToggleInactive: {
-    backgroundColor: '#E8F0E8',
-  },
-  investToggleText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: Colors.textSecondary,
-  },
-  investToggleTextActive: {
-    color: '#FFFFFF',
   },
   minAmountRow: {
     flexDirection: 'row',
     marginTop: 14,
     paddingTop: 14,
     borderTopWidth: 1,
-    borderTopColor: '#EEEEEE',
+    borderTopColor: Colors.divider,
   },
   minAmountCol: {
     flex: 1,
@@ -512,8 +444,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   minAmountValue: {
-    fontSize: 18,
-    fontWeight: '700',
+    ...Typography.h2,
     color: Colors.text,
   },
 });

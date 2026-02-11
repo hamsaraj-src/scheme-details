@@ -48,7 +48,7 @@ export const Accordion: React.FC<AccordionProps> = ({
       >
         <Text style={styles.title}>{title}</Text>
         <Animated.View style={chevronStyle}>
-          <FontAwesome5 name="chevron-up" size={14} color="#9CA3AF" />
+          <FontAwesome5 name="chevron-up" size={14} color={Colors.chevronGray} />
         </Animated.View>
       </TouchableOpacity>
       {expanded && (
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#E8E8E8',
+    borderColor: Colors.borderLight,
   },
   header: {
     flexDirection: 'row',

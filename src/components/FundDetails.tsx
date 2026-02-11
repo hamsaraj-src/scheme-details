@@ -1,31 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { SchemeData } from '../data/schemeData';
 import { formatDate, getLockInPeriodText } from '../utils/formatters';
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
+import { DetailCard } from './shared';
 
 interface FundDetailsProps {
   scheme: SchemeData;
 }
-
-interface DetailCardProps {
-  icon: string;
-  label: string;
-  value: string;
-  fullWidth?: boolean;
-}
-
-const DetailCard: React.FC<DetailCardProps> = ({ icon, label, value, fullWidth }) => (
-  <View style={[styles.detailCard, fullWidth && styles.detailCardFull]}>
-    <View style={styles.cardHeader}>
-      <FontAwesome5 name={icon} size={16} color={Colors.headerGreen} />
-      <Text style={styles.cardLabel}>{label}</Text>
-    </View>
-    <Text style={styles.cardValue}>{value}</Text>
-  </View>
-);
 
 export const FundDetails: React.FC<FundDetailsProps> = ({ scheme }) => {
   const { t } = useTranslation();
@@ -112,12 +96,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   objectiveBold: {
-    fontSize: 15,
-    fontWeight: '700',
+    ...Typography.label,
     color: Colors.text,
   },
   objectiveText: {
-    fontSize: 15,
+    ...Typography.labelRegular,
     color: Colors.text,
     lineHeight: 22,
   },
@@ -125,28 +108,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-  },
-  detailCard: {
-    width: '48%',
-    marginBottom: 20,
-  },
-  detailCardFull: {
-    width: '100%',
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 6,
-  },
-  cardLabel: {
-    fontSize: 15,
-    color: Colors.textSecondary,
-    marginLeft: 8,
-  },
-  cardValue: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: Colors.text,
-    paddingLeft: 22,
   },
 });

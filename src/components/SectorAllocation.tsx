@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Canvas, Path, Skia } from '@shopify/react-native-skia';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
 
 interface SectorItem {
   sector_name: string;
@@ -25,11 +26,11 @@ const RADIUS = 65;
 const INNER_RADIUS = 40;
 
 const ASSET_COLORS: Record<string, string> = {
-  Equity: '#4CAF50',
-  Debt: '#2196F3',
-  Cash: '#FF9800',
-  Gold: '#FFC107',
-  Other: '#9E9E9E',
+  Equity: Colors.assetEquity,
+  Debt: Colors.assetDebt,
+  Cash: Colors.assetCash,
+  Gold: Colors.assetGold,
+  Other: Colors.assetOther,
 };
 
 const createDonutSegment = (
@@ -219,8 +220,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.headerGreen,
   },
   tabText: {
-    fontSize: 15,
-    fontWeight: '500',
+    ...Typography.labelMedium,
     color: Colors.textSecondary,
   },
   tabTextActive: {
@@ -252,13 +252,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   legendPct: {
-    fontSize: 14,
-    fontWeight: '700',
+    ...Typography.bodyStrong,
     color: Colors.text,
     width: 65,
   },
   legendName: {
-    fontSize: 14,
+    ...Typography.body,
     color: Colors.text,
     flex: 1,
   },

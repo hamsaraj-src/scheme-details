@@ -14,11 +14,11 @@ interface AssetAllocationProps {
 }
 
 const ASSET_COLORS: Record<string, string> = {
-  Equity: '#4CAF50',
-  Debt: '#2196F3',
-  Cash: '#FF9800',
-  Gold: '#FFC107',
-  Other: '#9E9E9E',
+  Equity: Colors.assetEquity,
+  Debt: Colors.assetDebt,
+  Cash: Colors.assetCash,
+  Gold: Colors.assetGold,
+  Other: Colors.assetOther,
 };
 
 export const AssetAllocation: React.FC<AssetAllocationProps> = ({ assets }) => {
