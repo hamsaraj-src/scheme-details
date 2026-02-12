@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Animated, {
@@ -67,7 +67,7 @@ interface ReturnAnalysisProps {
   lumpsumReturns: ReturnItem[];
 }
 
-export const ReturnAnalysis: React.FC<ReturnAnalysisProps> = ({
+export const ReturnAnalysis: React.FC<ReturnAnalysisProps> = memo(({
   sipReturns,
   lumpsumReturns,
 }) => {
@@ -155,7 +155,7 @@ export const ReturnAnalysis: React.FC<ReturnAnalysisProps> = ({
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   chartOuter: {

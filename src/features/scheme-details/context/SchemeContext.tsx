@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { schemeData, SchemeData } from '../../../data/schemeData';
 
 interface SchemeContextValue {
@@ -11,14 +11,25 @@ const SchemeContext = createContext<SchemeContextValue>({
   isLoading: true,
 });
 
+const LOADING_DELAY_MS = 1500;
+
 export const SchemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const value = useMemo<SchemeContextValue>(() => {
-    try {
-      const result = schemeData?.result?.[0]?.mf_schemes?.[0];
-      return { scheme: result || null, isLoading: false };
-    } catch {
-      return { scheme: null, isLoading: false };
-    }
+  const [value, setValue] = useState<SchemeContextValue>({
+    scheme: null,
+    isLoading: true,
+  });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const result = schemeData?.result?.[0]?.mf_schemes?.[0] as SchemeData | undefined;
+        setValue({ scheme: result ?? null, isLoading: false });
+      } catch {
+        setValue({ scheme: null, isLoading: false });
+      }
+    }, LOADING_DELAY_MS);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (

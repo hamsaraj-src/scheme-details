@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -12,9 +12,10 @@ interface SchemeHeaderProps {
   scheme: SchemeData;
 }
 
-export const SchemeHeader: React.FC<SchemeHeaderProps> = ({ scheme }) => {
+export const SchemeHeader: React.FC<SchemeHeaderProps> = memo(({ scheme }) => {
   const { t } = useTranslation();
   const [bookmarked, setBookmarked] = useState(false);
+  const toggleBookmark = useCallback(() => setBookmarked((prev) => !prev), []);
 
   const navChangeNum = parseFloat(scheme.per_day_nav) || 0;
   const isPositive = navChangeNum >= 0;
@@ -42,7 +43,7 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({ scheme }) => {
             <Text style={styles.tagText}>{scheme.plan_type || t('schemeDetails.growth')}</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.bookmarkButton} onPress={() => setBookmarked(!bookmarked)}>
+        <TouchableOpacity style={styles.bookmarkButton} onPress={toggleBookmark}>
           <FontAwesome5 name="bookmark" solid={bookmarked} size={22} color={Colors.primary} />
         </TouchableOpacity>
       </View>
@@ -146,7 +147,7 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({ scheme }) => {
       ) : null}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

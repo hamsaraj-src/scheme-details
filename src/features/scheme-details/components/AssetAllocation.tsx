@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../../../shared/constants/colors';
@@ -21,7 +21,7 @@ const ASSET_COLORS: Record<string, string> = {
   Other: Colors.assetOther,
 };
 
-export const AssetAllocation: React.FC<AssetAllocationProps> = ({ assets }) => {
+export const AssetAllocation: React.FC<AssetAllocationProps> = memo(({ assets }) => {
   const { t } = useTranslation();
 
   return (
@@ -57,7 +57,7 @@ export const AssetAllocation: React.FC<AssetAllocationProps> = ({ assets }) => {
       ))}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   barContainer: {

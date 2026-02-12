@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Canvas, Path, Skia } from '@shopify/react-native-skia';
 import { useTranslation } from 'react-i18next';
@@ -59,7 +59,7 @@ const createDonutSegment = (
   return path.toSVGString();
 };
 
-export const SectorAllocation: React.FC<SectorAllocationProps> = ({ sectors, assets }) => {
+export const SectorAllocation: React.FC<SectorAllocationProps> = memo(({ sectors, assets }) => {
   const { t } = useTranslation();
   const {
     activeTab,
@@ -67,6 +67,17 @@ export const SectorAllocation: React.FC<SectorAllocationProps> = ({ sectors, ass
     allSegments,
     animatedSegments,
   } = useSectorAllocation({ sectors, assets });
+
+  const memoizedPaths = useMemo(() =>
+    animatedSegments
+      .filter((seg) => seg.animEnd - seg.animStart >= 0.01)
+      .map((seg) => ({
+        name: seg.name,
+        color: seg.color,
+        path: createDonutSegment(seg.animStart, seg.animEnd, RADIUS, INNER_RADIUS),
+      })),
+    [animatedSegments],
+  );
 
   return (
     <View>
@@ -94,23 +105,14 @@ export const SectorAllocation: React.FC<SectorAllocationProps> = ({ sectors, ass
       {/* Donut chart + legend */}
       <View style={styles.chartRow}>
         <Canvas style={{ width: CHART_SIZE, height: CHART_SIZE }}>
-          {animatedSegments.map((seg) => {
-            if (seg.animEnd - seg.animStart < 0.01) return null;
-            const pathStr = createDonutSegment(
-              seg.animStart,
-              seg.animEnd,
-              RADIUS,
-              INNER_RADIUS
-            );
-            return (
-              <Path
-                key={seg.name}
-                path={pathStr}
-                style="fill"
-                color={seg.color}
-              />
-            );
-          })}
+          {memoizedPaths.map((seg) => (
+            <Path
+              key={seg.name}
+              path={seg.path}
+              style="fill"
+              color={seg.color}
+            />
+          ))}
         </Canvas>
 
         <View style={styles.legendContainer}>
@@ -125,7 +127,7 @@ export const SectorAllocation: React.FC<SectorAllocationProps> = ({ sectors, ass
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   tabRow: {

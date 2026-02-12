@@ -24,7 +24,7 @@ export const useRiskometer = (riskLevel: string) => {
     return RISK_LEVELS.findIndex((r) => r.matchValue === normalized);
   }, [riskLevel]);
 
-  const badgeColor = BADGE_COLORS[riskLevel.toLowerCase().trim()] || Colors.riskVeryHighBadge;
+  const badgeColor = BADGE_COLORS[riskLevel.toLowerCase().trim()] ?? Colors.textSecondary;
 
   return {
     activeIndex,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import {
   View,
   Text,
@@ -35,7 +35,7 @@ interface NavGraphProps {
   scheme: SchemeData;
 }
 
-export const NavGraph: React.FC<NavGraphProps> = ({ scheme }) => {
+export const NavGraph: React.FC<NavGraphProps> = memo(({ scheme }) => {
   const { t } = useTranslation();
   const {
     selectedPeriod,
@@ -145,7 +145,7 @@ export const NavGraph: React.FC<NavGraphProps> = ({ scheme }) => {
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   card: {

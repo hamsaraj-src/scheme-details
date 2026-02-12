@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../../../shared/constants/colors';
@@ -59,18 +59,23 @@ const getDescKey = (key: string, value: number): string => {
   }
 };
 
-export const AnalyticsData: React.FC<AnalyticsDataProps> = ({ analytics }) => {
+export const AnalyticsData: React.FC<AnalyticsDataProps> = memo(({ analytics }) => {
   const { t } = useTranslation();
 
+  const safeParseFloat = (val: string): number => {
+    const n = parseFloat(val);
+    return Number.isNaN(n) ? 0 : n;
+  };
+
   const items = useMemo(() => [
-    { key: 'beta', label: t('analytics.beta'), value: formatNumber(analytics.beta, t), raw: parseFloat(analytics.beta) || 0, icon: 'bold' },
-    { key: 'standardDeviation', label: t('analytics.standardDeviation'), value: t('common.percentValue', { value: formatNumber(analytics.standard_deviation, t) }), raw: parseFloat(analytics.standard_deviation) || 0, icon: 'chart-area' },
-    { key: 'sharpeRatio', label: t('analytics.sharpeRatio'), value: formatNumber(analytics.sharpe_ratio, t), raw: parseFloat(analytics.sharpe_ratio) || 0, icon: 'percentage' },
-    { key: 'alpha', label: t('analytics.alpha'), value: formatNumber(analytics.alpha, t), raw: parseFloat(analytics.alpha) || 0, icon: 'font' },
-    { key: 'sortinoRatio', label: t('analytics.sortinoRatio'), value: formatNumber(analytics.sortino_ratio, t), raw: parseFloat(analytics.sortino_ratio) || 0, icon: 'arrow-up' },
-    { key: 'treynor', label: t('analytics.treynor'), value: formatNumber(analytics.treynor, t), raw: parseFloat(analytics.treynor) || 0, icon: 'gem' },
-    { key: 'informationRatio', label: t('analytics.informationRatio'), value: formatNumber(analytics.information_ratio, t), raw: parseFloat(analytics.information_ratio) || 0, icon: 'info-circle' },
-    { key: 'rsquared', label: t('analytics.rSquared'), value: formatNumber(analytics.rsquared, t), raw: parseFloat(analytics.rsquared) || 0, icon: 'bullseye' },
+    { key: 'beta', label: t('analytics.beta'), value: formatNumber(analytics.beta, t), raw: safeParseFloat(analytics.beta), icon: 'bold' },
+    { key: 'standardDeviation', label: t('analytics.standardDeviation'), value: t('common.percentValue', { value: formatNumber(analytics.standard_deviation, t) }), raw: safeParseFloat(analytics.standard_deviation), icon: 'chart-area' },
+    { key: 'sharpeRatio', label: t('analytics.sharpeRatio'), value: formatNumber(analytics.sharpe_ratio, t), raw: safeParseFloat(analytics.sharpe_ratio), icon: 'percentage' },
+    { key: 'alpha', label: t('analytics.alpha'), value: formatNumber(analytics.alpha, t), raw: safeParseFloat(analytics.alpha), icon: 'font' },
+    { key: 'sortinoRatio', label: t('analytics.sortinoRatio'), value: formatNumber(analytics.sortino_ratio, t), raw: safeParseFloat(analytics.sortino_ratio), icon: 'arrow-up' },
+    { key: 'treynor', label: t('analytics.treynor'), value: formatNumber(analytics.treynor, t), raw: safeParseFloat(analytics.treynor), icon: 'gem' },
+    { key: 'informationRatio', label: t('analytics.informationRatio'), value: formatNumber(analytics.information_ratio, t), raw: safeParseFloat(analytics.information_ratio), icon: 'info-circle' },
+    { key: 'rsquared', label: t('analytics.rSquared'), value: formatNumber(analytics.rsquared, t), raw: safeParseFloat(analytics.rsquared), icon: 'bullseye' },
   ], [analytics, t]);
 
   return (
@@ -97,7 +102,7 @@ export const AnalyticsData: React.FC<AnalyticsDataProps> = ({ analytics }) => {
       ))}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   card: {

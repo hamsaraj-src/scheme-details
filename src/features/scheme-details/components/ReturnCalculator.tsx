@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +22,7 @@ interface ReturnCalculatorProps {
   sixMonthReturn: number;
 }
 
-export const ReturnCalculator: React.FC<ReturnCalculatorProps> = ({
+export const ReturnCalculator: React.FC<ReturnCalculatorProps> = memo(({
   oneYearReturn,
   threeYearReturn,
   fiveYearReturn,
@@ -106,7 +106,7 @@ export const ReturnCalculator: React.FC<ReturnCalculatorProps> = ({
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   amountRow: {

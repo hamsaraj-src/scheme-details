@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +18,7 @@ interface HoldingsProps {
 
 const INITIAL_COUNT = 6;
 
-export const Holdings: React.FC<HoldingsProps> = ({ holdings }) => {
+export const Holdings: React.FC<HoldingsProps> = memo(({ holdings }) => {
   const { t } = useTranslation();
   const [showAll, setShowAll] = useState(false);
 
@@ -91,7 +91,7 @@ export const Holdings: React.FC<HoldingsProps> = ({ holdings }) => {
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   tableHeader: {

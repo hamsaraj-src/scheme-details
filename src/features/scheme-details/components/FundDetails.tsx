@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { SchemeData } from '../../../data/schemeData';
@@ -11,7 +11,7 @@ interface FundDetailsProps {
   scheme: SchemeData;
 }
 
-export const FundDetails: React.FC<FundDetailsProps> = ({ scheme }) => {
+export const FundDetails: React.FC<FundDetailsProps> = memo(({ scheme }) => {
   const { t } = useTranslation();
 
   const contactAddress = [
@@ -89,7 +89,7 @@ export const FundDetails: React.FC<FundDetailsProps> = ({ scheme }) => {
       ) : null}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   objectiveSection: {

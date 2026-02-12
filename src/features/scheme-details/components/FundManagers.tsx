@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../../../shared/constants/colors';
@@ -37,7 +37,7 @@ const formatTenure = (dateFrom: string, t: (key: string, opts?: Record<string, u
   });
 };
 
-export const FundManagers: React.FC<FundManagersProps> = ({ managers }) => {
+export const FundManagers: React.FC<FundManagersProps> = memo(({ managers }) => {
   const { t } = useTranslation();
 
   return (
@@ -63,7 +63,7 @@ export const FundManagers: React.FC<FundManagersProps> = ({ managers }) => {
       ))}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   card: {

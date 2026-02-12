@@ -297,4 +297,180 @@ export const schemeData = {
   errorMessage: "",
 };
 
-export type SchemeData = typeof schemeData.result[0]['mf_schemes'][0];
+// ── Explicit interface with proper optionality ──────────────────────────
+
+export interface NavPoint {
+  nav: number;
+  nav_date: string;
+}
+
+export interface ReturnItem {
+  month: string;
+  percentage: string | number;
+}
+
+export interface SectorDetail {
+  sector_code: number;
+  sector_name: string;
+  percentage_assets: number;
+}
+
+export interface AssetAllocationItem {
+  asset_name: string;
+  asset_percentage: number;
+}
+
+export interface HoldingItem {
+  Company_names: string;
+  holdings_percentages: number;
+  holding_value: number;
+  instrument_description: string;
+}
+
+export interface FundManager {
+  person_name: string;
+  person_type: string;
+  date_from: string;
+}
+
+export interface FrequencyDetail {
+  id: number;
+  scheme_code: string;
+  sip_frequency: string;
+  sip_minimum_installment_amount: number;
+  sip_maximum_installment_amount: number;
+  sip_minimum_installment_numbers: number;
+  sip_maximum_installment_numbers: number;
+  mf_scheme_id: number;
+}
+
+export interface SchemeDuration {
+  duration_value: number;
+  duration: string;
+  NAV: number;
+}
+
+export interface AnalyticsData {
+  beta: string;
+  alpha: string;
+  pescore: string;
+  plan_id: number;
+  treynor: string;
+  rsquared: string;
+  isin_code: string;
+  as_on_date: string;
+  Drawdown_1Y: string;
+  Drawdown_3Y: string;
+  sharpe_ratio: string;
+  sortino_ratio: string;
+  DividendYield_1Y?: string;
+  DividendYield_3Y?: string;
+  information_ratio: string;
+  standard_deviation: string;
+}
+
+export interface SchemeData {
+  // Identifiers
+  scheme_id: number;
+  scheme_name: string;
+  scheme_code: string;
+  isin: string;
+
+  // Category & benchmark
+  category_id: number;
+  category_name: string;
+  sub_category_id: number;
+  sub_category_name: string;
+  plan_type: string;
+  scheme_type_ai?: string;
+  benchmark_index_name: string;
+
+  // AMC details
+  amc_id: number;
+  amc_name: string;
+  amc_code: string;
+  amc_full_name: string;
+  amc_color_codes?: string;
+  amc_image_icons: string;
+  amc_phone?: string;
+  amc_address1?: string;
+  amc_address2?: string;
+  amc_address3?: string;
+  amc_address4?: string;
+  amc_address5?: string;
+
+  // NAV & AUM
+  aum_value: string;
+  nav_date: string;
+  nav_value: number;
+  nav_change_percentage?: string;
+  latest_nav: number;
+  latest_nav_date: string;
+  per_day_nav: string;
+  per_day_nav_percentage: string;
+
+  // Investment limits
+  min_investment: number;
+  min_lumpsum_amount: number;
+  min_sip_amount: number;
+  minimum_amount?: number;
+
+  // Returns
+  one_year_return: number;
+  three_year_return: number;
+  five_year_return: number;
+  weekly?: number;
+  monthly?: number;
+  three_month: number;
+  six_month: number;
+
+  // Ratings & risk
+  fund_rating: string;
+  investor_rating?: string;
+  investor_rating_text?: string;
+  colour_name?: string;
+  riskometer_value: string;
+
+  // Descriptions
+  description?: string;
+  scheme_objective?: string;
+  scheme_description_ai?: string;
+
+  // Fund configuration
+  lock_in_period: string;
+  exit_load?: string;
+  rta?: string;
+  listing_date: string;
+  expense_ratio: number;
+  bajaj_amc_id?: number;
+  purchase_allowed?: string;
+  sip_flag?: string;
+  is_index_fund?: number;
+  is_etf_fof_fund?: number;
+  scheme_sip_freequency?: string;
+  sip_frequency?: string;
+  is_user_wishlist_added?: number;
+  is_user_cart_added?: number;
+
+  // Analytics
+  analytics_data?: AnalyticsData;
+
+  // Returns data
+  sip_returns: ReturnItem[];
+  lumpsum_return: ReturnItem[];
+
+  // NAV history
+  nav_json: NavPoint[];
+
+  // Holdings & allocation
+  holdings_data?: HoldingItem[];
+  holding_asset_allocation?: AssetAllocationItem[];
+  mf_sector_details?: SectorDetail[];
+
+  // Fund managers
+  fund_managers?: FundManager[];
+
+  // Other
+  frequency_details?: FrequencyDetail[];
+  scheme_duration?: SchemeDuration[];
+}

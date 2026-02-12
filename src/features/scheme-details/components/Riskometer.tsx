@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '../../../shared/constants/colors';
@@ -9,7 +9,7 @@ interface RiskometerProps {
   riskLevel: string;
 }
 
-export const Riskometer: React.FC<RiskometerProps> = ({ riskLevel }) => {
+export const Riskometer: React.FC<RiskometerProps> = memo(({ riskLevel }) => {
   const { t } = useTranslation();
   const { activeIndex, badgeColor } = useRiskometer(riskLevel);
 
@@ -61,7 +61,7 @@ export const Riskometer: React.FC<RiskometerProps> = ({ riskLevel }) => {
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
