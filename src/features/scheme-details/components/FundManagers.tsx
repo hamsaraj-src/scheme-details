@@ -71,10 +71,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
   },
-  cardBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.dividerLight,
-  },
   avatar: {
     marginRight: 14,
   },

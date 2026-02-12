@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Colors } from '../../../shared/constants/colors';
 import { Typography } from '../../../shared/constants/typography';
 
@@ -10,11 +11,12 @@ interface InfoRowProps {
 }
 
 export const InfoRow: React.FC<InfoRowProps> = ({ label, value, valueColor }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.row}>
       <Text style={styles.label}>{label}</Text>
       <Text style={[styles.value, valueColor ? { color: valueColor } : undefined]}>
-        {value || 'N/A'}
+        {value || t('common.na')}
       </Text>
     </View>
   );

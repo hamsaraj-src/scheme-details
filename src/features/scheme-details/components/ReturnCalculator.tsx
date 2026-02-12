@@ -20,8 +20,6 @@ interface ReturnCalculatorProps {
   fiveYearReturn: number;
   threeMonthReturn: number;
   sixMonthReturn: number;
-  minInvestment: number;
-  minSipAmount: number;
 }
 
 export const ReturnCalculator: React.FC<ReturnCalculatorProps> = ({

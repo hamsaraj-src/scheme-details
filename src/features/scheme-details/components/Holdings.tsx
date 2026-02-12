@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -22,19 +22,22 @@ export const Holdings: React.FC<HoldingsProps> = ({ holdings }) => {
   const { t } = useTranslation();
   const [showAll, setShowAll] = useState(false);
 
-  const sortedHoldings = [...holdings]
-    .filter((h) => h.holdings_percentages > 0)
-    .sort((a, b) => b.holdings_percentages - a.holdings_percentages);
+  const sortedHoldings = useMemo(() =>
+    [...holdings]
+      .filter((h) => h.holdings_percentages > 0)
+      .sort((a, b) => b.holdings_percentages - a.holdings_percentages),
+    [holdings],
+  );
 
   const displayedHoldings = showAll
     ? sortedHoldings
     : sortedHoldings.slice(0, INITIAL_COUNT);
 
-  const formatValueMn = (value: number) => {
+  const formatValueMn = useCallback((value: number) => {
     if (!value && value !== 0) return t('schemeDetails.na');
     const mn = value / 1000000;
     return t('common.currencyValue', { value: Math.round(mn) });
-  };
+  }, [t]);
 
   return (
     <View>

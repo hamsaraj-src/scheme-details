@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.hamsexpo.scheme-details"
+      "bundleIdentifier": "com.hamsexpo.scheme-details",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.hamsexpo.schemedetails",
@@ -30,6 +33,11 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "3f2d882a-e350-4d39-8a17-82e6619a1210"
+      }
+    }
   }
 }

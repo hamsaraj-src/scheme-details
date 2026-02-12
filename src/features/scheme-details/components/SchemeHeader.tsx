@@ -3,72 +3,43 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { SchemeData } from '../../../data/schemeData';
 import { Colors } from '../../../shared/constants/colors';
 import { Typography } from '../../../shared/constants/typography';
 import { formatDate } from '../../../shared/utils/formatters';
 
 interface SchemeHeaderProps {
-  schemeName: string;
-  amcName: string;
-  amcImageUrl: string;
-  categoryName: string;
-  subCategoryName: string;
-  planType: string;
-  fundRating: string;
-  navValue: number;
-  navDate: string;
-  perDayNav: string;
-  perDayNavPercentage: string;
-  aumValue: string;
-  oneYearReturn: number;
-  benchmarkIndex: string;
-  schemeDescription: string;
+  scheme: SchemeData;
 }
 
-export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
-  schemeName,
-  amcName,
-  amcImageUrl,
-  categoryName,
-  subCategoryName,
-  planType,
-  fundRating,
-  navValue,
-  navDate,
-  perDayNav,
-  perDayNavPercentage,
-  aumValue,
-  oneYearReturn,
-  benchmarkIndex,
-  schemeDescription,
-}) => {
+export const SchemeHeader: React.FC<SchemeHeaderProps> = ({ scheme }) => {
   const { t } = useTranslation();
   const [bookmarked, setBookmarked] = useState(false);
 
-  const navChangeNum = parseFloat(perDayNav) || 0;
+  const navChangeNum = parseFloat(scheme.per_day_nav) || 0;
   const isPositive = navChangeNum >= 0;
-  const ratingStars = parseInt(fundRating, 10) || 0;
-  const formattedNavDate = formatDate(navDate, t);
-  const safeNavValue = typeof navValue === 'number' ? navValue : 0;
-  const safeOneYearReturn = typeof oneYearReturn === 'number' ? oneYearReturn : 0;
+  const ratingStars = parseInt(scheme.fund_rating, 10) || 0;
+  const formattedNavDate = formatDate(scheme.latest_nav_date, t);
+  const safeNavValue = typeof scheme.latest_nav === 'number' ? scheme.latest_nav : 0;
+  const safeOneYearReturn = typeof scheme.one_year_return === 'number' ? scheme.one_year_return : 0;
 
   return (
     <View style={styles.container}>
       {/* Tags row + bookmark */}
       <View style={styles.tagsBookmarkRow}>
         <View style={styles.tagsRow}>
-          {categoryName ? (
+          {scheme.category_name ? (
             <View style={styles.tag}>
-              <Text style={styles.tagText}>{categoryName}</Text>
+              <Text style={styles.tagText}>{scheme.category_name}</Text>
             </View>
           ) : null}
-          {subCategoryName ? (
+          {scheme.sub_category_name ? (
             <View style={styles.tag}>
-              <Text style={styles.tagText}>{subCategoryName}</Text>
+              <Text style={styles.tagText}>{scheme.sub_category_name}</Text>
             </View>
           ) : null}
           <View style={styles.tag}>
-            <Text style={styles.tagText}>{planType || t('schemeDetails.growth')}</Text>
+            <Text style={styles.tagText}>{scheme.plan_type || t('schemeDetails.growth')}</Text>
           </View>
         </View>
         <TouchableOpacity style={styles.bookmarkButton} onPress={() => setBookmarked(!bookmarked)}>
@@ -79,13 +50,13 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
       {/* AMC Logo + Scheme Name + Resilient badge */}
       <View style={styles.schemeRow}>
         <Image
-          source={{ uri: amcImageUrl }}
+          source={{ uri: scheme.amc_image_icons }}
           style={styles.amcLogo}
           resizeMode="contain"
         />
         <View style={styles.schemeInfo}>
           <Text style={styles.schemeName} numberOfLines={2}>
-            {schemeName}
+            {scheme.scheme_name}
           </Text>
           <LinearGradient
             colors={[Colors.resilientGradientStart, Colors.resilientGradientEnd]}
@@ -116,16 +87,16 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
               {' '}{t('format.navChange', {
                 arrow: isPositive ? t('common.arrowUp') : t('common.arrowDown'),
                 currency: t('common.rupee'),
-                change: perDayNav || t('common.defaultAmount'),
+                change: scheme.per_day_nav || t('common.defaultAmount'),
                 sign: isPositive ? '+' : '',
-                percentage: perDayNavPercentage || t('common.defaultAmount'),
+                percentage: scheme.per_day_nav_percentage || t('common.defaultAmount'),
               })}
             </Text>
           </View>
         </View>
         <View style={styles.infoColRight}>
           <Text style={styles.infoLabel}>{t('schemeDetails.aum')}</Text>
-          <Text style={styles.infoValueBold}>{t('common.currencyValue', { value: aumValue })}</Text>
+          <Text style={styles.infoValueBold}>{t('common.currencyValue', { value: scheme.aum_value })}</Text>
         </View>
       </View>
 
@@ -139,7 +110,7 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
         </View>
         <View style={styles.infoColRight}>
           <Text style={styles.infoLabel}>{t('schemeDetails.benchmarkIndex')}</Text>
-          <Text style={styles.infoValueBold}>{benchmarkIndex || t('schemeDetails.na')}</Text>
+          <Text style={styles.infoValueBold}>{scheme.benchmark_index_name || t('schemeDetails.na')}</Text>
         </View>
       </View>
 
@@ -168,9 +139,9 @@ export const SchemeHeader: React.FC<SchemeHeaderProps> = ({
       </View>
 
       {/* Description */}
-      {schemeDescription ? (
+      {scheme.scheme_description_ai ? (
         <Text style={styles.description}>
-          {t('format.quotedText', { text: schemeDescription })}
+          {t('format.quotedText', { text: scheme.scheme_description_ai })}
         </Text>
       ) : null}
     </View>
@@ -207,7 +178,6 @@ const styles = StyleSheet.create({
   tag: {
     borderWidth: 1,
     borderColor: Colors.tagBorder,
-    // backgroundColor: '#FFFFFF',
     paddingHorizontal: 14,
     paddingVertical: 6,
     borderRadius: 20,

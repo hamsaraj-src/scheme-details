@@ -62,35 +62,11 @@ export const SchemeDetailsScreen: React.FC = () => {
           <View style={styles.greenSemicircle} />
 
           {/* Scheme Header Card */}
-          <SchemeHeader
-            schemeName={scheme.scheme_name}
-            amcName={scheme.amc_name}
-            amcImageUrl={scheme.amc_image_icons}
-            categoryName={scheme.category_name}
-            subCategoryName={scheme.sub_category_name}
-            planType={scheme.plan_type}
-            fundRating={scheme.fund_rating}
-            navValue={scheme.latest_nav}
-            navDate={scheme.latest_nav_date}
-            perDayNav={scheme.per_day_nav}
-            perDayNavPercentage={scheme.per_day_nav_percentage}
-            aumValue={scheme.aum_value}
-            oneYearReturn={scheme.one_year_return}
-            benchmarkIndex={scheme.benchmark_index_name}
-            schemeDescription={scheme.scheme_description_ai}
-          />
+          <SchemeHeader scheme={scheme} />
 
           {/* NAV Graph Section — standalone card, not accordion */}
           <NavGraphProvider>
-            <NavGraph
-              navData={scheme.nav_json}
-              latestNav={scheme.latest_nav}
-              latestNavDate={scheme.latest_nav_date}
-              perDayNav={scheme.per_day_nav}
-              perDayNavPercentage={scheme.per_day_nav_percentage}
-              minInvestment={scheme.min_investment}
-              minSipAmount={scheme.min_sip_amount}
-            />
+            <NavGraph scheme={scheme} />
           </NavGraphProvider>
 
           {/* Return Analysis Section */}
@@ -112,8 +88,6 @@ export const SchemeDetailsScreen: React.FC = () => {
                 fiveYearReturn={scheme.five_year_return}
                 threeMonthReturn={scheme.three_month}
                 sixMonthReturn={scheme.six_month}
-                minInvestment={scheme.min_investment}
-                minSipAmount={scheme.min_sip_amount}
               />
             </ReturnCalculatorProvider>
           </Accordion>

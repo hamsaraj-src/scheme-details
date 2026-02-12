@@ -15,6 +15,7 @@ import {
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
+import { SchemeData } from '../../../data/schemeData';
 import { Colors } from '../../../shared/constants/colors';
 import { Typography } from '../../../shared/constants/typography';
 import { ChipSelector } from '../../../shared/components';
@@ -31,24 +32,10 @@ import {
 } from '../hooks/useNavGraph';
 
 interface NavGraphProps {
-  navData: { nav: number; nav_date: string }[];
-  latestNav: number;
-  latestNavDate: string;
-  perDayNav: string;
-  perDayNavPercentage: string;
-  minInvestment?: number;
-  minSipAmount?: number;
+  scheme: SchemeData;
 }
 
-export const NavGraph: React.FC<NavGraphProps> = ({
-  navData,
-  latestNav,
-  latestNavDate,
-  perDayNav,
-  perDayNavPercentage,
-  minInvestment,
-  minSipAmount,
-}) => {
+export const NavGraph: React.FC<NavGraphProps> = ({ scheme }) => {
   const { t } = useTranslation();
   const {
     selectedPeriod,
@@ -61,7 +48,7 @@ export const NavGraph: React.FC<NavGraphProps> = ({
     maxNav,
     touchInfo,
     composedGesture,
-  } = useNavGraph({ navData });
+  } = useNavGraph({ navData: scheme.nav_json });
 
   return (
     <View style={styles.card}>
@@ -145,27 +132,15 @@ export const NavGraph: React.FC<NavGraphProps> = ({
         />
       </View>
 
-      {/* One Time / Start SIP toggle */}
-      {/* <View style={styles.investToggleRow}>
-        <ToggleButtonGroup
-          options={[
-            { key: 'onetime', label: t('navGraph.oneTime') },
-            { key: 'sip', label: t('navGraph.startSIP') },
-          ]}
-          activeKey={investTab}
-          onSelect={(key) => setInvestTab(key as 'onetime' | 'sip')}
-        />
-      </View> */}
-
       {/* Min amounts */}
       <View style={styles.minAmountRow}>
         <View style={styles.minAmountCol}>
           <Text style={styles.minAmountLabel}>{t('navGraph.minOneTimeAmount')}</Text>
-          <Text style={styles.minAmountValue}>{minInvestment != null ? t('common.currencyValueSpaced', { value: minInvestment.toLocaleString('en-IN') }) : t('schemeDetails.na')}</Text>
+          <Text style={styles.minAmountValue}>{scheme.min_investment != null ? t('common.currencyValueSpaced', { value: scheme.min_investment.toLocaleString('en-IN') }) : t('schemeDetails.na')}</Text>
         </View>
         <View style={styles.minAmountColRight}>
           <Text style={styles.minAmountLabel}>{t('navGraph.minSIPAmount')}</Text>
-          <Text style={styles.minAmountValue}>{minSipAmount != null ? t('format.currencyPerDay', { currency: t('common.rupee'), value: minSipAmount.toLocaleString('en-IN'), unit: t('navGraph.perDay') }) : t('schemeDetails.na')}</Text>
+          <Text style={styles.minAmountValue}>{scheme.min_sip_amount != null ? t('format.currencyPerDay', { currency: t('common.rupee'), value: scheme.min_sip_amount.toLocaleString('en-IN'), unit: t('navGraph.perDay') }) : t('schemeDetails.na')}</Text>
         </View>
       </View>
     </View>
@@ -262,9 +237,6 @@ const styles = StyleSheet.create({
   },
   periodContainer: {
     marginTop: 4,
-  },
-  investToggleRow: {
-    marginTop: 16,
   },
   minAmountRow: {
     flexDirection: 'row',
